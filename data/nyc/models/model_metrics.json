@@ -1,0 +1,8 @@
+{
+  "best_model": "XGBoost",
+  "best_test_mae": 0.22873655151962585,
+  "best_test_rmse": 0.2907872095747972,
+  "best_test_r2": 0.37258896647344875,
+  "vibe_importance_pct": 23.31148910522461,
+  "improvement_vs_baseline_pct": 0.2996109906140849
+}

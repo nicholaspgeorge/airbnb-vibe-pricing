@@ -1,0 +1,63 @@
+================================================================================
+3-CITY VIBE SCORE COMPARISON
+Date: 2025-11-08
+================================================================================
+
+SUMMARY STATISTICS
+--------------------------------------------------------------------------------
+Metric                             London          Austin             NYC
+--------------------------------------------------------------------------------
+Neighborhoods                          33              43             217
+Mean Vibe Score                      42.0            48.9            62.9
+Median Vibe Score                    41.2            46.1            63.6
+Std Deviation                        20.1            26.9            22.4
+Min Score                            15.1             6.7            10.9
+Max Score                            83.3           100.0           100.0
+Range                                68.2            93.3            89.1
+Mean Sentiment                      0.367           0.427           0.385
+
+PERFECT SCORES (100.0)
+--------------------------------------------------------------------------------
+London: 0 neighborhoods
+Austin: 2 neighborhoods (78703, 78704)
+NYC: 5 neighborhoods (Brooklyn Heights, Cobble Hill, Carroll Gardens, Park Slope, Prospect Heights)
+
+TOP 5 NEIGHBORHOODS BY CITY
+--------------------------------------------------------------------------------
+
+London:
+         neighbourhood  vibe_score
+Kensington and Chelsea        83.3
+            Wandsworth        77.8
+               Hackney        75.0
+  Richmond upon Thames        74.0
+Hammersmith and Fulham        72.6
+
+Austin:
+ neighbourhood  vibe_score
+         78703       100.0
+         78704       100.0
+         78701        94.6
+         78702        93.2
+         78756        82.7
+
+NYC:
+   neighbourhood  vibe_score
+Brooklyn Heights       100.0
+     Cobble Hill       100.0
+ Carroll Gardens       100.0
+      Park Slope       100.0
+Prospect Heights       100.0
+
+================================================================================
+KEY INSIGHTS
+================================================================================
+1. NYC has 6.6x more neighborhoods than London (217 vs 33)
+2. NYC mean vibe (62.9) is 50% higher than London
+3. NYC has 5 perfect scores vs London (0) and Austin (2)
+4. Sentiment ranking: Austin (0.427) > NYC (0.385) > London (0.367)
+5. NYC has the highest market diversity: 217 neighborhoods across 5 boroughs
+6. All top 5 NYC neighborhoods are in Brooklyn (not Manhattan as predicted!)
+7. Austin has widest vibe range (93.3 points)
+8. London has no perfect 100.0 scores (max: 83.3)
+================================================================================

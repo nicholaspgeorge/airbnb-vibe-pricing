@@ -1,0 +1,2716 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_491f802b4369dbdc8573ecaf2f8c7d8e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+<body>
+    
+    
+    <div style="position: fixed;
+                top: 10px; left: 50px; width: 400px; height: 60px;
+                background-color: white; border:2px solid grey; z-index:9999;
+                font-size:16px; padding: 10px; border-radius: 5px;">
+        <h4 style="margin: 0;">Nyc Neighborhood Vibe Scores</h4>
+        <p style="margin: 5px 0; font-size: 12px;">Darker blue = lower vibe | Brighter red = higher vibe</p>
+    </div>
+    
+    
+            <div class="folium-map" id="map_491f802b4369dbdc8573ecaf2f8c7d8e" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_491f802b4369dbdc8573ecaf2f8c7d8e = L.map(
+                "map_491f802b4369dbdc8573ecaf2f8c7d8e",
+                {
+                    center: [40.7148234410771, -73.93047673860569],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_45534b8d0c8f48b973a6c304a34678a7 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_45534b8d0c8f48b973a6c304a34678a7.addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+    var color_map_b74cc9446455731d8904357a0329a9de = {};
+
+    
+    color_map_b74cc9446455731d8904357a0329a9de.color = d3.scale.threshold()
+              .domain([0.0, 0.20040080160320642, 0.40080160320641284, 0.6012024048096193, 0.8016032064128257, 1.002004008016032, 1.2024048096192386, 1.402805611222445, 1.6032064128256514, 1.8036072144288577, 2.004008016032064, 2.2044088176352705, 2.404809619238477, 2.6052104208416833, 2.80561122244489, 3.006012024048096, 3.2064128256513027, 3.406813627254509, 3.6072144288577155, 3.8076152304609217, 4.008016032064128, 4.208416833667335, 4.408817635270541, 4.609218436873747, 4.809619238476954, 5.01002004008016, 5.210420841683367, 5.410821643286573, 5.61122244488978, 5.811623246492986, 6.012024048096192, 6.212424849699399, 6.412825651302605, 6.613226452905812, 6.813627254509018, 7.014028056112225, 7.214428857715431, 7.414829659318637, 7.615230460921843, 7.81563126252505, 8.016032064128256, 8.216432865731463, 8.41683366733467, 8.617234468937875, 8.817635270541082, 9.01803607214429, 9.218436873747494, 9.418837675350701, 9.619238476953909, 9.819639278557114, 10.02004008016032, 10.220440881763528, 10.420841683366733, 10.62124248496994, 10.821643286573146, 11.022044088176353, 11.22244488977956, 11.422845691382765, 11.623246492985972, 11.823647294589179, 12.024048096192384, 12.224448897795591, 12.424849699398798, 12.625250501002004, 12.82565130260521, 13.026052104208416, 13.226452905811623, 13.42685370741483, 13.627254509018035, 13.827655310621243, 14.02805611222445, 14.228456913827655, 14.428857715430862, 14.629258517034069, 14.829659318637274, 15.030060120240481, 15.230460921843687, 15.430861723446894, 15.6312625250501, 15.831663326653306, 16.03206412825651, 16.23246492985972, 16.432865731462925, 16.63326653306613, 16.83366733466934, 17.034068136272545, 17.23446893787575, 17.43486973947896, 17.635270541082164, 17.83567134268537, 18.03607214428858, 18.236472945891784, 18.43687374749499, 18.637274549098198, 18.837675350701403, 19.03807615230461, 19.238476953907817, 19.438877755511022, 19.639278557114228, 19.839679358717436, 20.04008016032064, 20.240480961923847, 20.440881763527056, 20.64128256513026, 20.841683366733466, 21.04208416833667, 21.24248496993988, 21.442885771543086, 21.64328657314629, 21.8436873747495, 22.044088176352705, 22.24448897795591, 22.44488977955912, 22.645290581162325, 22.84569138276553, 23.04609218436874, 23.246492985971944, 23.44689378757515, 23.647294589178358, 23.847695390781563, 24.04809619238477, 24.248496993987978, 24.448897795591183, 24.649298597194388, 24.849699398797597, 25.050100200400802, 25.250501002004007, 25.450901803607213, 25.65130260521042, 25.851703406813627, 26.052104208416832, 26.25250501002004, 26.452905811623246, 26.65330661322645, 26.85370741482966, 27.054108216432866, 27.25450901803607, 27.45490981963928, 27.655310621242485, 27.85571142284569, 28.0561122244489, 28.256513026052104, 28.45691382765531, 28.65731462925852, 28.857715430861724, 29.05811623246493, 29.258517034068138, 29.458917835671343, 29.65931863727455, 29.859719438877754, 30.060120240480963, 30.260521042084168, 30.460921843687373, 30.661322645290582, 30.861723446893787, 31.062124248496993, 31.2625250501002, 31.462925851703407, 31.663326653306612, 31.86372745490982, 32.06412825651302, 32.26452905811623, 32.46492985971944, 32.66533066132264, 32.86573146292585, 33.06613226452906, 33.26653306613226, 33.46693386773547, 33.66733466933868, 33.86773547094188, 34.06813627254509, 34.2685370741483, 34.4689378757515, 34.66933867735471, 34.86973947895792, 35.07014028056112, 35.27054108216433, 35.47094188376754, 35.67134268537074, 35.87174348697395, 36.07214428857716, 36.27254509018036, 36.47294589178357, 36.673346693386776, 36.87374749498998, 37.07414829659319, 37.274549098196395, 37.4749498997996, 37.675350701402806, 37.875751503006015, 38.07615230460922, 38.276553106212425, 38.476953907815634, 38.677354709418836, 38.877755511022045, 39.078156312625254, 39.278557114228455, 39.478957915831664, 39.67935871743487, 39.879759519038075, 40.08016032064128, 40.28056112224449, 40.480961923847694, 40.6813627254509, 40.88176352705411, 41.08216432865731, 41.28256513026052, 41.482965931863724, 41.68336673346693, 41.88376753507014, 42.08416833667334, 42.28456913827655, 42.48496993987976, 42.68537074148296, 42.88577154308617, 43.08617234468938, 43.28657314629258, 43.48697394789579, 43.687374749499, 43.8877755511022, 44.08817635270541, 44.28857715430862, 44.48897795591182, 44.68937875751503, 44.88977955911824, 45.09018036072144, 45.29058116232465, 45.49098196392786, 45.69138276553106, 45.89178356713427, 46.09218436873748, 46.29258517034068, 46.49298597194389, 46.6933867735471, 46.8937875751503, 47.09418837675351, 47.294589178356716, 47.49498997995992, 47.69539078156313, 47.895791583166336, 48.09619238476954, 48.296593186372746, 48.496993987975955, 48.69739478957916, 48.897795591182366, 49.098196392785574, 49.298597194388776, 49.498997995991985, 49.699398797595194, 49.899799599198396, 50.100200400801604, 50.300601202404806, 50.501002004008015, 50.701402805611224, 50.901803607214426, 51.102204408817634, 51.30260521042084, 51.503006012024045, 51.703406813627254, 51.90380761523046, 52.104208416833664, 52.30460921843687, 52.50501002004008, 52.705410821643284, 52.90581162324649, 53.1062124248497, 53.3066132264529, 53.50701402805611, 53.70741482965932, 53.90781563126252, 54.10821643286573, 54.30861723446894, 54.50901803607214, 54.70941883767535, 54.90981963927856, 55.11022044088176, 55.31062124248497, 55.51102204408818, 55.71142284569138, 55.91182364729459, 56.1122244488978, 56.312625250501, 56.51302605210421, 56.71342685370742, 56.91382765531062, 57.11422845691383, 57.31462925851704, 57.51503006012024, 57.71543086172345, 57.91583166332666, 58.11623246492986, 58.31663326653307, 58.517034068136276, 58.71743486973948, 58.91783567134269, 59.11823647294589, 59.3186372745491, 59.519038076152306, 59.71943887775551, 59.91983967935872, 60.120240480961925, 60.32064128256513, 60.521042084168336, 60.721442885771545, 60.921843687374746, 61.122244488977955, 61.322645290581164, 61.523046092184366, 61.723446893787575, 61.92384769539078, 62.124248496993985, 62.324649298597194, 62.5250501002004, 62.725450901803605, 62.92585170340681, 63.12625250501002, 63.326653306613224, 63.52705410821643, 63.72745490981964, 63.92785571142284, 64.12825651302605, 64.32865731462925, 64.52905811623246, 64.72945891783567, 64.92985971943888, 65.13026052104209, 65.33066132264528, 65.53106212424849, 65.7314629258517, 65.93186372745491, 66.13226452905812, 66.33266533066133, 66.53306613226452, 66.73346693386773, 66.93386773547094, 67.13426853707415, 67.33466933867736, 67.53507014028057, 67.73547094188376, 67.93587174348697, 68.13627254509018, 68.33667334669339, 68.5370741482966, 68.7374749498998, 68.937875751503, 69.13827655310621, 69.33867735470942, 69.53907815631263, 69.73947895791584, 69.93987975951904, 70.14028056112224, 70.34068136272545, 70.54108216432866, 70.74148296593187, 70.94188376753507, 71.14228456913828, 71.34268537074148, 71.54308617234469, 71.7434869739479, 71.9438877755511, 72.14428857715431, 72.34468937875752, 72.54509018036072, 72.74549098196393, 72.94589178356713, 73.14629258517034, 73.34669338677355, 73.54709418837675, 73.74749498997996, 73.94789579158316, 74.14829659318637, 74.34869739478958, 74.54909819639279, 74.74949899799599, 74.9498997995992, 75.1503006012024, 75.35070140280561, 75.55110220440882, 75.75150300601203, 75.95190380761522, 76.15230460921843, 76.35270541082164, 76.55310621242485, 76.75350701402806, 76.95390781563127, 77.15430861723446, 77.35470941883767, 77.55511022044088, 77.75551102204409, 77.9559118236473, 78.15631262525051, 78.3567134268537, 78.55711422845691, 78.75751503006012, 78.95791583166333, 79.15831663326654, 79.35871743486975, 79.55911823647294, 79.75951903807615, 79.95991983967936, 80.16032064128257, 80.36072144288578, 80.56112224448898, 80.76152304609218, 80.96192384769539, 81.1623246492986, 81.3627254509018, 81.56312625250501, 81.76352705410822, 81.96392785571142, 82.16432865731463, 82.36472945891784, 82.56513026052104, 82.76553106212425, 82.96593186372745, 83.16633266533066, 83.36673346693387, 83.56713426853707, 83.76753507014028, 83.96793587174349, 84.16833667334669, 84.3687374749499, 84.5691382765531, 84.76953907815631, 84.96993987975952, 85.17034068136273, 85.37074148296593, 85.57114228456913, 85.77154308617234, 85.97194388777555, 86.17234468937876, 86.37274549098197, 86.57314629258516, 86.77354709418837, 86.97394789579158, 87.17434869739479, 87.374749498998, 87.57515030060121, 87.7755511022044, 87.97595190380761, 88.17635270541082, 88.37675350701403, 88.57715430861724, 88.77755511022045, 88.97795591182364, 89.17835671342685, 89.37875751503006, 89.57915831663327, 89.77955911823648, 89.97995991983969, 90.18036072144288, 90.38076152304609, 90.5811623246493, 90.78156312625251, 90.98196392785572, 91.18236472945891, 91.38276553106212, 91.58316633266533, 91.78356713426854, 91.98396793587175, 92.18436873747495, 92.38476953907815, 92.58517034068136, 92.78557114228457, 92.98597194388778, 93.18637274549098, 93.3867735470942, 93.58717434869739, 93.7875751503006, 93.9879759519038, 94.18837675350701, 94.38877755511022, 94.58917835671343, 94.78957915831663, 94.98997995991984, 95.19038076152304, 95.39078156312625, 95.59118236472946, 95.79158316633267, 95.99198396793587, 96.19238476953907, 96.39278557114228, 96.59318637274549, 96.7935871743487, 96.99398797595191, 97.1943887775551, 97.39478957915831, 97.59519038076152, 97.79559118236473, 97.99599198396794, 98.19639278557115, 98.39679358717434, 98.59719438877755, 98.79759519038076, 98.99799599198397, 99.19839679358718, 99.39879759519039, 99.59919839679358, 99.79959919839679, 100.0])
+              .range(['#08519cff', '#08519cff', '#08529dff', '#09529dff', '#09539dff', '#0a539eff', '#0a549eff', '#0a549eff', '#0b559fff', '#0b559fff', '#0c569fff', '#0c56a0ff', '#0c57a0ff', '#0d57a0ff', '#0d58a1ff', '#0e58a1ff', '#0e59a1ff', '#0f59a2ff', '#0f5aa2ff', '#0f5aa2ff', '#105ba3ff', '#105ba3ff', '#115ca3ff', '#115ca4ff', '#115da4ff', '#125da4ff', '#125ea5ff', '#135ea5ff', '#135fa5ff', '#135fa6ff', '#1460a6ff', '#1460a6ff', '#1561a7ff', '#1561a7ff', '#1662a7ff', '#1662a8ff', '#1663a8ff', '#1763a8ff', '#1764a9ff', '#1864a9ff', '#1865a9ff', '#1865aaff', '#1966aaff', '#1966aaff', '#1a67abff', '#1a67abff', '#1b67abff', '#1b68acff', '#1b68acff', '#1c69acff', '#1c69adff', '#1d6aadff', '#1d6aadff', '#1d6baeff', '#1e6baeff', '#1e6caeff', '#1f6cafff', '#1f6dafff', '#1f6dafff', '#206eb0ff', '#206eb0ff', '#216fb0ff', '#216fb1ff', '#2270b1ff', '#2270b1ff', '#2271b2ff', '#2371b2ff', '#2372b2ff', '#2472b3ff', '#2473b3ff', '#2473b3ff', '#2574b4ff', '#2574b4ff', '#2675b4ff', '#2675b5ff', '#2676b5ff', '#2776b5ff', '#2777b6ff', '#2877b6ff', '#2878b6ff', '#2978b7ff', '#2979b7ff', '#2979b7ff', '#2a7ab8ff', '#2a7ab8ff', '#2b7bb8ff', '#2b7bb9ff', '#2b7cb9ff', '#2c7cb9ff', '#2c7dbaff', '#2d7dbaff', '#2d7ebaff', '#2d7ebbff', '#2e7fbbff', '#2e7fbbff', '#2f80bcff', '#2f80bcff', '#3081bcff', '#3081bdff', '#3082bdff', '#3182bdff', '#3183beff', '#3283beff', '#3383beff', '#3384beff', '#3484bfff', '#3485bfff', '#3585bfff', '#3586bfff', '#3686c0ff', '#3787c0ff', '#3787c0ff', '#3887c0ff', '#3888c1ff', '#3988c1ff', '#3a89c1ff', '#3a89c1ff', '#3b8ac2ff', '#3b8ac2ff', '#3c8bc2ff', '#3c8bc2ff', '#3d8bc3ff', '#3e8cc3ff', '#3e8cc3ff', '#3f8dc3ff', '#3f8dc4ff', '#408ec4ff', '#418ec4ff', '#418ec4ff', '#428fc5ff', '#428fc5ff', '#4390c5ff', '#4390c5ff', '#4491c6ff', '#4591c6ff', '#4592c6ff', '#4692c6ff', '#4692c7ff', '#4793c7ff', '#4893c7ff', '#4894c7ff', '#4994c8ff', '#4995c8ff', '#4a95c8ff', '#4a96c8ff', '#4b96c9ff', '#4c96c9ff', '#4c97c9ff', '#4d97c9ff', '#4d98caff', '#4e98caff', '#4f99caff', '#4f99caff', '#509acbff', '#509acbff', '#519acbff', '#519bcbff', '#529bccff', '#539cccff', '#539cccff', '#549dccff', '#549dcdff', '#559ecdff', '#569ecdff', '#569ecdff', '#579fceff', '#579fceff', '#58a0ceff', '#58a0ceff', '#59a1cfff', '#5aa1cfff', '#5aa2cfff', '#5ba2cfff', '#5ba2d0ff', '#5ca3d0ff', '#5da3d0ff', '#5da4d0ff', '#5ea4d1ff', '#5ea5d1ff', '#5fa5d1ff', '#5fa6d1ff', '#60a6d2ff', '#61a6d2ff', '#61a7d2ff', '#62a7d2ff', '#62a8d3ff', '#63a8d3ff', '#64a9d3ff', '#64a9d3ff', '#65a9d4ff', '#65aad4ff', '#66aad4ff', '#66abd4ff', '#67abd5ff', '#68acd5ff', '#68acd5ff', '#69add5ff', '#69add6ff', '#6aadd6ff', '#6baed6ff', '#6caed6ff', '#6dafd5ff', '#6eafd5ff', '#70b0d4ff', '#71b1d3ff', '#73b1d3ff', '#74b2d2ff', '#76b2d1ff', '#77b3d1ff', '#79b3d0ff', '#7ab4cfff', '#7cb4ceff', '#7db5ceff', '#7fb5cdff', '#80b6ccff', '#82b6ccff', '#83b7cbff', '#85b7caff', '#86b8caff', '#88b9c9ff', '#89b9c8ff', '#8bbac7ff', '#8cbac7ff', '#8ebbc6ff', '#8fbbc5ff', '#90bcc5ff', '#92bcc4ff', '#93bdc3ff', '#95bdc3ff', '#96bec2ff', '#98bec1ff', '#99bfc1ff', '#9bbfc0ff', '#9cc0bfff', '#9ec1beff', '#9fc1beff', '#a1c2bdff', '#a2c2bcff', '#a4c3bcff', '#a5c3bbff', '#a7c4baff', '#a8c4baff', '#aac5b9ff', '#abc5b8ff', '#adc6b8ff', '#aec6b7ff', '#b0c7b6ff', '#b1c7b5ff', '#b2c8b5ff', '#b4c9b4ff', '#b5c9b3ff', '#b7cab3ff', '#b8cab2ff', '#bacbb1ff', '#bbcbb1ff', '#bdccb0ff', '#beccafff', '#c0cdaeff', '#c1cdaeff', '#c3ceadff', '#c4ceacff', '#c6cfacff', '#c7cfabff', '#c9d0aaff', '#cad1aaff', '#ccd1a9ff', '#cdd2a8ff', '#cfd2a8ff', '#d0d3a7ff', '#d2d3a6ff', '#d3d4a5ff', '#d5d4a5ff', '#d6d5a4ff', '#d7d5a3ff', '#d9d6a3ff', '#dad6a2ff', '#dcd7a1ff', '#ddd7a1ff', '#dfd8a0ff', '#e0d99fff', '#e2d99fff', '#e3da9eff', '#e5da9dff', '#e6db9cff', '#e8db9cff', '#e9dc9bff', '#ebdc9aff', '#ecdd9aff', '#eedd99ff', '#efde98ff', '#f1de98ff', '#f2df97ff', '#f4df96ff', '#f5e096ff', '#f7e195ff', '#f8e194ff', '#f9e293ff', '#fbe293ff', '#fce392ff', '#fee391ff', '#fee391ff', '#fee290ff', '#fee190ff', '#fee08fff', '#fedf8eff', '#fedf8eff', '#fede8dff', '#fedd8dff', '#fedc8cff', '#fedb8cff', '#feda8bff', '#fed98bff', '#fed88aff', '#fed889ff', '#fed789ff', '#fed688ff', '#fed588ff', '#fed487ff', '#fed387ff', '#fed286ff', '#fed285ff', '#fed185ff', '#fed084ff', '#fecf84ff', '#fece83ff', '#fecd83ff', '#fecc82ff', '#fecc82ff', '#fecb81ff', '#feca80ff', '#fec980ff', '#fec87fff', '#fec77fff', '#fec67eff', '#fec57eff', '#fec57dff', '#fec47cff', '#fec37cff', '#fec27bff', '#fec17bff', '#fec07aff', '#febf7aff', '#febf79ff', '#febe79ff', '#febd78ff', '#febc77ff', '#febb77ff', '#feba76ff', '#feb976ff', '#fdb875ff', '#fdb875ff', '#fdb774ff', '#fdb673ff', '#fdb573ff', '#fdb472ff', '#fdb372ff', '#fdb271ff', '#fdb271ff', '#fdb170ff', '#fdb06fff', '#fdaf6fff', '#fdae6eff', '#fdad6eff', '#fdac6dff', '#fdac6dff', '#fdab6cff', '#fdaa6cff', '#fda96bff', '#fda86aff', '#fda76aff', '#fda669ff', '#fda569ff', '#fda568ff', '#fda468ff', '#fda367ff', '#fda266ff', '#fda166ff', '#fda065ff', '#fd9f65ff', '#fd9f64ff', '#fd9e64ff', '#fd9d63ff', '#fd9c63ff', '#fd9b62ff', '#fd9a61ff', '#fd9961ff', '#fd9860ff', '#fd9860ff', '#fd975fff', '#fd965fff', '#fd955eff', '#fd945dff', '#fd935dff', '#fd925cff', '#fd925cff', '#fd915bff', '#fd905bff', '#fd8f5aff', '#fd8e5aff', '#fc8d59ff', '#fc8c58ff', '#fb8a57ff', '#fa8956ff', '#fa8855ff', '#f98655ff', '#f88554ff', '#f78353ff', '#f78252ff', '#f68151ff', '#f57f50ff', '#f57e4fff', '#f47c4eff', '#f37b4dff', '#f2794cff', '#f2784cff', '#f1774bff', '#f0754aff', '#ef7449ff', '#ef7248ff', '#ee7147ff', '#ed7046ff', '#ec6e45ff', '#ec6d44ff', '#eb6b44ff', '#ea6a43ff', '#ea6842ff', '#e96741ff', '#e86640ff', '#e7643fff', '#e7633eff', '#e6613dff', '#e5603cff', '#e45f3bff', '#e45d3bff', '#e35c3aff', '#e25a39ff', '#e15938ff', '#e15737ff', '#e05636ff', '#df5535ff', '#df5334ff', '#de5233ff', '#dd5033ff', '#dc4f32ff', '#dc4e31ff', '#db4c30ff', '#da4b2fff', '#d9492eff', '#d9482dff', '#d8462cff', '#d7452bff', '#d6442aff', '#d6422aff', '#d54129ff', '#d43f28ff', '#d43e27ff', '#d33c26ff', '#d23b25ff', '#d13a24ff', '#d13823ff', '#d03722ff', '#cf3522ff', '#ce3421ff', '#ce3320ff', '#cd311fff', '#cc301eff', '#cb2e1dff', '#cb2d1cff', '#ca2b1bff', '#c92a1aff', '#c82919ff', '#c82719ff', '#c72618ff', '#c62417ff', '#c62316ff', '#c52215ff', '#c42014ff', '#c31f13ff', '#c31d12ff', '#c21c11ff', '#c11a11ff', '#c01910ff', '#c0180fff', '#bf160eff', '#be150dff', '#bd130cff', '#bd120bff', '#bc110aff', '#bb0f09ff', '#bb0e08ff', '#ba0c08ff', '#b90b07ff', '#b80906ff', '#b80805ff', '#b70704ff', '#b60503ff', '#b50402ff', '#b50201ff', '#b40100ff', '#b30000ff']);
+    
+
+    color_map_b74cc9446455731d8904357a0329a9de.x = d3.scale.linear()
+              .domain([0.0, 100.0])
+              .range([0, 450 - 50]);
+
+    color_map_b74cc9446455731d8904357a0329a9de.legend = L.control({position: 'topright'});
+    color_map_b74cc9446455731d8904357a0329a9de.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_b74cc9446455731d8904357a0329a9de.legend.addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+
+    color_map_b74cc9446455731d8904357a0329a9de.xAxis = d3.svg.axis()
+        .scale(color_map_b74cc9446455731d8904357a0329a9de.x)
+        .orient("top")
+        .tickSize(1)
+        .tickValues([0.0, 20.0, 40.0, 60.0, 80.0, 100.0]);
+
+    color_map_b74cc9446455731d8904357a0329a9de.svg = d3.select(".legend.leaflet-control").append("svg")
+        .attr("id", 'legend')
+        .attr("width", 450)
+        .attr("height", 40);
+
+    color_map_b74cc9446455731d8904357a0329a9de.g = color_map_b74cc9446455731d8904357a0329a9de.svg.append("g")
+        .attr("class", "key")
+        .attr("fill", "black")
+        .attr("transform", "translate(25,16)");
+
+    color_map_b74cc9446455731d8904357a0329a9de.g.selectAll("rect")
+        .data(color_map_b74cc9446455731d8904357a0329a9de.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_b74cc9446455731d8904357a0329a9de.x(color_map_b74cc9446455731d8904357a0329a9de.color.domain()[i - 1]) : color_map_b74cc9446455731d8904357a0329a9de.x.range()[0],
+            x1: i < color_map_b74cc9446455731d8904357a0329a9de.color.domain().length ? color_map_b74cc9446455731d8904357a0329a9de.x(color_map_b74cc9446455731d8904357a0329a9de.color.domain()[i]) : color_map_b74cc9446455731d8904357a0329a9de.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 40 - 30)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+
+    color_map_b74cc9446455731d8904357a0329a9de.g.call(color_map_b74cc9446455731d8904357a0329a9de.xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", 21)
+        .attr("fill", "black")
+        .text("Neighborhood Vibe Score");
+    
+            var circle_7c7d1d7df3e78b27b9d8a30055e0c7c0 = L.circle(
+                [40.59279345163172, -73.79525348211752],
+                {"bubblingMouseEvents": true, "color": "#fd955eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd955eff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 846.6999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_80d55e64b6162f2ccd098e6101a3394d = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2d50220665754783c6a6fcd4f428bfb4 = $(`<div id="html_2d50220665754783c6a6fcd4f428bfb4" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Arverne</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 78.1/100             </p>         </div>         </div>`)[0];
+                popup_80d55e64b6162f2ccd098e6101a3394d.setContent(html_2d50220665754783c6a6fcd4f428bfb4);
+            
+        
+
+        circle_7c7d1d7df3e78b27b9d8a30055e0c7c0.bindPopup(popup_80d55e64b6162f2ccd098e6101a3394d)
+        ;
+
+        
+    
+    
+            var circle_951e7c5139c434506ec259771bba49c5 = L.circle(
+                [40.76398649804454, -73.92056975654107],
+                {"bubblingMouseEvents": true, "color": "#fec87fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec87fff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 764.0999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_2873dbf4a1e7f6dca0c070a5e94540fa = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_7abe3c0c1e56b86d3fa688973dc2e75f = $(`<div id="html_7abe3c0c1e56b86d3fa688973dc2e75f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Astoria</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 66.3/100             </p>         </div>         </div>`)[0];
+                popup_2873dbf4a1e7f6dca0c070a5e94540fa.setContent(html_7abe3c0c1e56b86d3fa688973dc2e75f);
+            
+        
+
+        circle_951e7c5139c434506ec259771bba49c5.bindPopup(popup_2873dbf4a1e7f6dca0c070a5e94540fa)
+        ;
+
+        
+    
+    
+            var circle_f57b6c9c0a6f30524eddab0f329ebb20 = L.circle(
+                [40.60506206996554, -74.00848771045156],
+                {"bubblingMouseEvents": true, "color": "#acc6b8ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#acc6b8ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 641.5999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_fc7fcef1f7505232949c0de5c88a4d4e = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_9ee3b28cd2e759b68bdd2bc7aa5998cc = $(`<div id="html_9ee3b28cd2e759b68bdd2bc7aa5998cc" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Bath Beach</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 48.8/100             </p>         </div>         </div>`)[0];
+                popup_fc7fcef1f7505232949c0de5c88a4d4e.setContent(html_9ee3b28cd2e759b68bdd2bc7aa5998cc);
+            
+        
+
+        circle_f57b6c9c0a6f30524eddab0f329ebb20.bindPopup(popup_fc7fcef1f7505232949c0de5c88a4d4e)
+        ;
+
+        
+    
+    
+            var circle_a94b3a1359bf0115ccccad48885f0429 = L.circle(
+                [40.71043035825628, -74.01617216391827],
+                {"bubblingMouseEvents": true, "color": "#d7d5a4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d7d5a4ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 682.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_365b1cd684671bb5b500fedb5eedf11c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_378391fa9d4403f91676d16a8c6cb3c9 = $(`<div id="html_378391fa9d4403f91676d16a8c6cb3c9" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Battery Park City</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 54.6/100             </p>         </div>         </div>`)[0];
+                popup_365b1cd684671bb5b500fedb5eedf11c.setContent(html_378391fa9d4403f91676d16a8c6cb3c9);
+            
+        
+
+        circle_a94b3a1359bf0115ccccad48885f0429.bindPopup(popup_365b1cd684671bb5b500fedb5eedf11c)
+        ;
+
+        
+    
+    
+            var circle_46fff102f70676b4ea35c67bae0ca113 = L.circle(
+                [40.63118429102365, -74.02543150645798],
+                {"bubblingMouseEvents": true, "color": "#fdb070ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fdb070ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 802.5999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_fd6b52d162574ac515b5fd3de4c0b3dc = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f8203bc4b7b7ca1219d79c389e6f6adb = $(`<div id="html_f8203bc4b7b7ca1219d79c389e6f6adb" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Bay Ridge</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 71.8/100             </p>         </div>         </div>`)[0];
+                popup_fd6b52d162574ac515b5fd3de4c0b3dc.setContent(html_f8203bc4b7b7ca1219d79c389e6f6adb);
+            
+        
+
+        circle_46fff102f70676b4ea35c67bae0ca113.bindPopup(popup_fd6b52d162574ac515b5fd3de4c0b3dc)
+        ;
+
+        
+    
+    
+            var circle_cbfb8c6612b84e8eb8268157547a3ab5 = L.circle(
+                [40.76207303238584, -73.76987069462695],
+                {"bubblingMouseEvents": true, "color": "#ef7248ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef7248ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 886.6, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_4b4d660db522ada693573b20a4d26008 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b616df0e45e5769fe423b933e099f404 = $(`<div id="html_b616df0e45e5769fe423b933e099f404" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Bayside</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 83.8/100             </p>         </div>         </div>`)[0];
+                popup_4b4d660db522ada693573b20a4d26008.setContent(html_b616df0e45e5769fe423b933e099f404);
+            
+        
+
+        circle_cbfb8c6612b84e8eb8268157547a3ab5.bindPopup(popup_4b4d660db522ada693573b20a4d26008)
+        ;
+
+        
+    
+    
+            var circle_54eec68a09993f0c6e4f100e6f0e74cd = L.circle(
+                [40.68693947114825, -73.93782619395166],
+                {"bubblingMouseEvents": true, "color": "#fda166ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fda166ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 827.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_262270ec37d922beb94d1e6ff6d32769 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_aa0574d0f1ec5276d5deeed97eb36370 = $(`<div id="html_aa0574d0f1ec5276d5deeed97eb36370" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Bedford-Stuyvesant</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 75.4/100             </p>         </div>         </div>`)[0];
+                popup_262270ec37d922beb94d1e6ff6d32769.setContent(html_aa0574d0f1ec5276d5deeed97eb36370);
+            
+        
+
+        circle_54eec68a09993f0c6e4f100e6f0e74cd.bindPopup(popup_262270ec37d922beb94d1e6ff6d32769)
+        ;
+
+        
+    
+    
+            var circle_4dbffc65c7289251639244b4202b0e6d = L.circle(
+                [40.612031614283346, -73.99301825530858],
+                {"bubblingMouseEvents": true, "color": "#febf79ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#febf79ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 778.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_ee8a9af6ec99d5aaef91ec33a81eec78 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_45e5646fc0e331d29d4c4f7bb42f0489 = $(`<div id="html_45e5646fc0e331d29d4c4f7bb42f0489" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Bensonhurst</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 68.4/100             </p>         </div>         </div>`)[0];
+                popup_ee8a9af6ec99d5aaef91ec33a81eec78.setContent(html_45e5646fc0e331d29d4c4f7bb42f0489);
+            
+        
+
+        circle_4dbffc65c7289251639244b4202b0e6d.bindPopup(popup_ee8a9af6ec99d5aaef91ec33a81eec78)
+        ;
+
+        
+    
+    
+            var circle_7799e767ccd27612b7de36ce61857c47 = L.circle(
+                [40.62496092358354, -73.91138165905078],
+                {"bubblingMouseEvents": true, "color": "#60a6d1ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#60a6d1ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 552.7, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_ec693e63044b4a7de82ddb3f42b5cbcd = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_6ab3cc1ec7e73a4a8f1540f6b682f7a8 = $(`<div id="html_6ab3cc1ec7e73a4a8f1540f6b682f7a8" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Bergen Beach</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 36.1/100             </p>         </div>         </div>`)[0];
+                popup_ec693e63044b4a7de82ddb3f42b5cbcd.setContent(html_6ab3cc1ec7e73a4a8f1540f6b682f7a8);
+            
+        
+
+        circle_7799e767ccd27612b7de36ce61857c47.bindPopup(popup_ec693e63044b4a7de82ddb3f42b5cbcd)
+        ;
+
+        
+    
+    
+            var circle_b73680b68204348152e83ab8b5dd8c97 = L.circle(
+                [40.68648856321428, -73.9855916123712],
+                {"bubblingMouseEvents": true, "color": "#b40000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b40000ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 999.3000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_b49504f134caa59d25f822d87a3deb7d = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_904da3a47f3c244bba7efe3b038d0ed5 = $(`<div id="html_904da3a47f3c244bba7efe3b038d0ed5" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Boerum Hill</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 99.9/100             </p>         </div>         </div>`)[0];
+                popup_b49504f134caa59d25f822d87a3deb7d.setContent(html_904da3a47f3c244bba7efe3b038d0ed5);
+            
+        
+
+        circle_b73680b68204348152e83ab8b5dd8c97.bindPopup(popup_b49504f134caa59d25f822d87a3deb7d)
+        ;
+
+        
+    
+    
+            var circle_acd88348870d7adc9bd19eb1faa4b1d2 = L.circle(
+                [40.638091550142875, -73.99563614565925],
+                {"bubblingMouseEvents": true, "color": "#fed185ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed185ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 750.1, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_3ebe0510c395cace079fe26e6ca5f359 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2c008fb9b06c17179c59686b98521f46 = $(`<div id="html_2c008fb9b06c17179c59686b98521f46" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Borough Park</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 64.3/100             </p>         </div>         </div>`)[0];
+                popup_3ebe0510c395cace079fe26e6ca5f359.setContent(html_2c008fb9b06c17179c59686b98521f46);
+            
+        
+
+        circle_acd88348870d7adc9bd19eb1faa4b1d2.bindPopup(popup_3ebe0510c395cace079fe26e6ca5f359)
+        ;
+
+        
+    
+    
+            var circle_e4140d7e9b676863040e86c03f8d671a = L.circle(
+                [40.710468526401954, -73.81266828262932],
+                {"bubblingMouseEvents": true, "color": "#61a6d2ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#61a6d2ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 555.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_b8f7f16029753936592152758b262b8a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_08ccd00d332974b247a8b9c015b17c42 = $(`<div id="html_08ccd00d332974b247a8b9c015b17c42" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Briarwood</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 36.5/100             </p>         </div>         </div>`)[0];
+                popup_b8f7f16029753936592152758b262b8a.setContent(html_08ccd00d332974b247a8b9c015b17c42);
+            
+        
+
+        circle_e4140d7e9b676863040e86c03f8d671a.bindPopup(popup_b8f7f16029753936592152758b262b8a)
+        ;
+
+        
+    
+    
+            var circle_9d34be993f96a01d5c851e1d0719e8b7 = L.circle(
+                [40.69479101574829, -73.9945173623161],
+                {"bubblingMouseEvents": true, "color": "#b30000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b30000ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 1000.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_ed02f148eccd8e9a446f9df99ab068d4 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e2219808f81af4dbeca7153f96034d4f = $(`<div id="html_e2219808f81af4dbeca7153f96034d4f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Brooklyn Heights</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 100.0/100             </p>         </div>         </div>`)[0];
+                popup_ed02f148eccd8e9a446f9df99ab068d4.setContent(html_e2219808f81af4dbeca7153f96034d4f);
+            
+        
+
+        circle_9d34be993f96a01d5c851e1d0719e8b7.bindPopup(popup_ed02f148eccd8e9a446f9df99ab068d4)
+        ;
+
+        
+    
+    
+            var circle_3dbc193f96a65898f446767ec6ef4b82 = L.circle(
+                [40.66418719971379, -73.91219761391835],
+                {"bubblingMouseEvents": true, "color": "#4b96c9ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4b96c9ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 503.70000000000005, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_fd5cffff5f34b24b3843a7434f3d6504 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_18a0d1ba8a2bd934f6ae3e8350ed77f0 = $(`<div id="html_18a0d1ba8a2bd934f6ae3e8350ed77f0" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Brownsville</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 29.1/100             </p>         </div>         </div>`)[0];
+                popup_fd5cffff5f34b24b3843a7434f3d6504.setContent(html_18a0d1ba8a2bd934f6ae3e8350ed77f0);
+            
+        
+
+        circle_3dbc193f96a65898f446767ec6ef4b82.bindPopup(popup_fd5cffff5f34b24b3843a7434f3d6504)
+        ;
+
+        
+    
+    
+            var circle_2c95ced3709426c1e0579ea0bd65e6d7 = L.circle(
+                [40.69580768934344, -73.91991059721951],
+                {"bubblingMouseEvents": true, "color": "#fda367ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fda367ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 825.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_bea19b013bc840ae7cab08c68dcfbf76 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e875d225197337990b965286ea3a8198 = $(`<div id="html_e875d225197337990b965286ea3a8198" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Bushwick</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 75.0/100             </p>         </div>         </div>`)[0];
+                popup_bea19b013bc840ae7cab08c68dcfbf76.setContent(html_e875d225197337990b965286ea3a8198);
+            
+        
+
+        circle_2c95ced3709426c1e0579ea0bd65e6d7.bindPopup(popup_bea19b013bc840ae7cab08c68dcfbf76)
+        ;
+
+        
+    
+    
+            var circle_4befac99dd7ce1b2bd885ae9b4a9320c = L.circle(
+                [40.63892243674786, -73.90116127581518],
+                {"bubblingMouseEvents": true, "color": "#fed286ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed286ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 748.6999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_220a26524ed17060d4dc17aaa819f315 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f00882f8ca0ab11f4426d8f425e8ec46 = $(`<div id="html_f00882f8ca0ab11f4426d8f425e8ec46" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Canarsie</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 64.1/100             </p>         </div>         </div>`)[0];
+                popup_220a26524ed17060d4dc17aaa819f315.setContent(html_f00882f8ca0ab11f4426d8f425e8ec46);
+            
+        
+
+        circle_4befac99dd7ce1b2bd885ae9b4a9320c.bindPopup(popup_220a26524ed17060d4dc17aaa819f315)
+        ;
+
+        
+    
+    
+            var circle_d26ca3fe21b4eebd30dcd2766e309eca = L.circle(
+                [40.68084593238202, -73.99619202862362],
+                {"bubblingMouseEvents": true, "color": "#b30000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b30000ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 1000.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_622a3866a9ac2e9138d826e4e5b99910 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_4288070970d78f4fb9fd664b9a145860 = $(`<div id="html_4288070970d78f4fb9fd664b9a145860" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Carroll Gardens</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 100.0/100             </p>         </div>         </div>`)[0];
+                popup_622a3866a9ac2e9138d826e4e5b99910.setContent(html_4288070970d78f4fb9fd664b9a145860);
+            
+        
+
+        circle_d26ca3fe21b4eebd30dcd2766e309eca.bindPopup(popup_622a3866a9ac2e9138d826e4e5b99910)
+        ;
+
+        
+    
+    
+            var circle_e99bad42f4537e73077a08e22d3a54ce = L.circle(
+                [40.74512123469278, -73.9976017183048],
+                {"bubblingMouseEvents": true, "color": "#cfd2a8ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cfd2a8ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 674.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_0dd483e6d86f5ddfb16a6d09e7b9244f = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_66ed4b04670436a45ac31c97d0beef19 = $(`<div id="html_66ed4b04670436a45ac31c97d0beef19" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Chelsea</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 53.5/100             </p>         </div>         </div>`)[0];
+                popup_0dd483e6d86f5ddfb16a6d09e7b9244f.setContent(html_66ed4b04670436a45ac31c97d0beef19);
+            
+        
+
+        circle_e99bad42f4537e73077a08e22d3a54ce.bindPopup(popup_0dd483e6d86f5ddfb16a6d09e7b9244f)
+        ;
+
+        
+    
+    
+            var circle_adfbdaa0244f67445f381aa920ce2e99 = L.circle(
+                [40.71607311491953, -73.99494968517705],
+                {"bubblingMouseEvents": true, "color": "#9dc0bfff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9dc0bfff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 627.5999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_2139749c89f3a6b27a39d3abbec2f43c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_3956f0cac0ba665b860a551bc4fc5f01 = $(`<div id="html_3956f0cac0ba665b860a551bc4fc5f01" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Chinatown</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 46.8/100             </p>         </div>         </div>`)[0];
+                popup_2139749c89f3a6b27a39d3abbec2f43c.setContent(html_3956f0cac0ba665b860a551bc4fc5f01);
+            
+        
+
+        circle_adfbdaa0244f67445f381aa920ce2e99.bindPopup(popup_2139749c89f3a6b27a39d3abbec2f43c)
+        ;
+
+        
+    
+    
+            var circle_4ce42eaddd60a665beb72ce1ec4b2658 = L.circle(
+                [40.84679823687786, -73.78709937184647],
+                {"bubblingMouseEvents": true, "color": "#7ab4cfff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7ab4cfff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 594.7, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_9e01db05bd6f57fb898f363f93ec9f7c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_a9df6d8e43f5e5c6c571a131b581c6b8 = $(`<div id="html_a9df6d8e43f5e5c6c571a131b581c6b8" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">City Island</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 42.1/100             </p>         </div>         </div>`)[0];
+                popup_9e01db05bd6f57fb898f363f93ec9f7c.setContent(html_a9df6d8e43f5e5c6c571a131b581c6b8);
+            
+        
+
+        circle_4ce42eaddd60a665beb72ce1ec4b2658.bindPopup(popup_9e01db05bd6f57fb898f363f93ec9f7c)
+        ;
+
+        
+    
+    
+            var circle_caf30e079487d74d61e91217ae292713 = L.circle(
+                [40.81096910373674, -73.85631566386623],
+                {"bubblingMouseEvents": true, "color": "#3786c0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3786c0ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 454.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_128a78ae067319be92c7c68726c3b910 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c902102eccf0eb59df7231fe9584f1d1 = $(`<div id="html_c902102eccf0eb59df7231fe9584f1d1" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Clason Point</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 22.0/100             </p>         </div>         </div>`)[0];
+                popup_128a78ae067319be92c7c68726c3b910.setContent(html_c902102eccf0eb59df7231fe9584f1d1);
+            
+        
+
+        circle_caf30e079487d74d61e91217ae292713.bindPopup(popup_128a78ae067319be92c7c68726c3b910)
+        ;
+
+        
+    
+    
+            var circle_7de2058356a7030f6a1f18d7847559c2 = L.circle(
+                [40.687213714090426, -73.9647693333359],
+                {"bubblingMouseEvents": true, "color": "#b50402ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b50402ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 995.8000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_6c55aad5818460e5b1bf7ae120468a2a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_ebbc69f91915be0337f7930a92a35eb2 = $(`<div id="html_ebbc69f91915be0337f7930a92a35eb2" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Clinton Hill</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 99.4/100             </p>         </div>         </div>`)[0];
+                popup_6c55aad5818460e5b1bf7ae120468a2a.setContent(html_ebbc69f91915be0337f7930a92a35eb2);
+            
+        
+
+        circle_7de2058356a7030f6a1f18d7847559c2.bindPopup(popup_6c55aad5818460e5b1bf7ae120468a2a)
+        ;
+
+        
+    
+    
+            var circle_e001b13b3966095ad3f5f4fa104b0873 = L.circle(
+                [40.688000826192905, -73.9951563720731],
+                {"bubblingMouseEvents": true, "color": "#b30000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b30000ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 1000.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_6dd2f721d60af351b376ed88c0ad4aef = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_9cba308e951b25d00abffa9a2604b3ed = $(`<div id="html_9cba308e951b25d00abffa9a2604b3ed" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Cobble Hill</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 100.0/100             </p>         </div>         </div>`)[0];
+                popup_6dd2f721d60af351b376ed88c0ad4aef.setContent(html_9cba308e951b25d00abffa9a2604b3ed);
+            
+        
+
+        circle_e001b13b3966095ad3f5f4fa104b0873.bindPopup(popup_6dd2f721d60af351b376ed88c0ad4aef)
+        ;
+
+        
+    
+    
+            var circle_cc8058ba6059931f95cd9d0a4147048a = L.circle(
+                [40.68540975719811, -74.00221061947317],
+                {"bubblingMouseEvents": true, "color": "#fd9961ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd9961ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 840.4, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_0461ca37a70a5067a6a12d43e45815a9 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_42bbf25bb3290a802a478459bf8554aa = $(`<div id="html_42bbf25bb3290a802a478459bf8554aa" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Columbia St</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 77.2/100             </p>         </div>         </div>`)[0];
+                popup_0461ca37a70a5067a6a12d43e45815a9.setContent(html_42bbf25bb3290a802a478459bf8554aa);
+            
+        
+
+        circle_cc8058ba6059931f95cd9d0a4147048a.bindPopup(popup_0461ca37a70a5067a6a12d43e45815a9)
+        ;
+
+        
+    
+    
+            var circle_a5ecf527e2c77e3b29f4617c56855b3b = L.circle(
+                [40.82620165070353, -73.92485466747473],
+                {"bubblingMouseEvents": true, "color": "#fedc8cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fedc8cff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 732.6, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_e09ff017aee983f00ef518b0448df60e = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_748d86e3e278eecba5c6cb52648f92cb = $(`<div id="html_748d86e3e278eecba5c6cb52648f92cb" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Concourse</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 61.8/100             </p>         </div>         </div>`)[0];
+                popup_e09ff017aee983f00ef518b0448df60e.setContent(html_748d86e3e278eecba5c6cb52648f92cb);
+            
+        
+
+        circle_a5ecf527e2c77e3b29f4617c56855b3b.bindPopup(popup_e09ff017aee983f00ef518b0448df60e)
+        ;
+
+        
+    
+    
+            var circle_2f17cd4a0a4db5b7ac8049429b426e33 = L.circle(
+                [40.57761474053284, -73.98699810095954],
+                {"bubblingMouseEvents": true, "color": "#d2d3a6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d2d3a6ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 678.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_a28bf6f57a08153b2fe45b785998a541 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c8e70c795c0db8ac4fb9bc9864a58759 = $(`<div id="html_c8e70c795c0db8ac4fb9bc9864a58759" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Coney Island</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 54.0/100             </p>         </div>         </div>`)[0];
+                popup_a28bf6f57a08153b2fe45b785998a541.setContent(html_c8e70c795c0db8ac4fb9bc9864a58759);
+            
+        
+
+        circle_2f17cd4a0a4db5b7ac8049429b426e33.bindPopup(popup_a28bf6f57a08153b2fe45b785998a541)
+        ;
+
+        
+    
+    
+            var circle_04e3cf6c52680b651196e60d98ad1c09 = L.circle(
+                [40.74264586583091, -73.86144868665359],
+                {"bubblingMouseEvents": true, "color": "#b8cab2ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b8cab2ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 653.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_d7b1ff1efdca6e0018fe45ec5c85d4c6 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_411368487b96584c051ac8ff5922501f = $(`<div id="html_411368487b96584c051ac8ff5922501f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Corona</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 50.5/100             </p>         </div>         </div>`)[0];
+                popup_d7b1ff1efdca6e0018fe45ec5c85d4c6.setContent(html_411368487b96584c051ac8ff5922501f);
+            
+        
+
+        circle_04e3cf6c52680b651196e60d98ad1c09.bindPopup(popup_d7b1ff1efdca6e0018fe45ec5c85d4c6)
+        ;
+
+        
+    
+    
+            var circle_e79b94fe2613848674325a817fa0a7a9 = L.circle(
+                [40.67306267997388, -73.94434986742061],
+                {"bubblingMouseEvents": true, "color": "#fda669ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fda669ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 820.1, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_e0fd42e87df1e00a3db64ad7c95c323e = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c528ca768f52b38b2041cd65c72749f5 = $(`<div id="html_c528ca768f52b38b2041cd65c72749f5" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Crown Heights</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 74.3/100             </p>         </div>         </div>`)[0];
+                popup_e0fd42e87df1e00a3db64ad7c95c323e.setContent(html_c528ca768f52b38b2041cd65c72749f5);
+            
+        
+
+        circle_e79b94fe2613848674325a817fa0a7a9.bindPopup(popup_e0fd42e87df1e00a3db64ad7c95c323e)
+        ;
+
+        
+    
+    
+            var circle_f8f0b79b483381e25715153a4a4cc1e4 = L.circle(
+                [40.68252932656451, -73.88059864861077],
+                {"bubblingMouseEvents": true, "color": "#7bb4cfff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7bb4cfff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 595.4000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_a4f0b5c6438b6b997d0250ffa65ea374 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_bdc81c4512ed9c6e0580ea9c2b5d1603 = $(`<div id="html_bdc81c4512ed9c6e0580ea9c2b5d1603" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Cypress Hills</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 42.2/100             </p>         </div>         </div>`)[0];
+                popup_a4f0b5c6438b6b997d0250ffa65ea374.setContent(html_bdc81c4512ed9c6e0580ea9c2b5d1603);
+            
+        
+
+        circle_f8f0b79b483381e25715153a4a4cc1e4.bindPopup(popup_a4f0b5c6438b6b997d0250ffa65ea374)
+        ;
+
+        
+    
+    
+            var circle_0b78bc00c3449bf43a4e4a365d57ff2d = L.circle(
+                [40.70317994128481, -73.98686255102889],
+                {"bubblingMouseEvents": true, "color": "#c21c11ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c21c11ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 972.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_3575776b693f1d295ba684d81b4bb4bf = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_0f94601c5308174a859ea374341618fb = $(`<div id="html_0f94601c5308174a859ea374341618fb" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">DUMBO</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 96.0/100             </p>         </div>         </div>`)[0];
+                popup_3575776b693f1d295ba684d81b4bb4bf.setContent(html_0f94601c5308174a859ea374341618fb);
+            
+        
+
+        circle_0b78bc00c3449bf43a4e4a365d57ff2d.bindPopup(popup_3575776b693f1d295ba684d81b4bb4bf)
+        ;
+
+        
+    
+    
+            var circle_a25cb1157aaa3db5b5e0b256ace40db8 = L.circle(
+                [40.775556578037, -73.91077555080616],
+                {"bubblingMouseEvents": true, "color": "#fc8d59ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fc8d59ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 860.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_11147aac456f3ef570f357a7cfe4effa = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_1e36bba84a4bf9f61dd35188e0d7c5bf = $(`<div id="html_1e36bba84a4bf9f61dd35188e0d7c5bf" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Ditmars Steinway</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 80.0/100             </p>         </div>         </div>`)[0];
+                popup_11147aac456f3ef570f357a7cfe4effa.setContent(html_1e36bba84a4bf9f61dd35188e0d7c5bf);
+            
+        
+
+        circle_a25cb1157aaa3db5b5e0b256ace40db8.bindPopup(popup_11147aac456f3ef570f357a7cfe4effa)
+        ;
+
+        
+    
+    
+            var circle_9704a256706854d8392cdab98eafcc78 = L.circle(
+                [40.69481206485148, -73.98462806484251],
+                {"bubblingMouseEvents": true, "color": "#dc4d31ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc4d31ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 923.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_07f31f5cd1023b0cb8446d5c3d2f2aae = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_74ae930971465e08c598d26fa1565089 = $(`<div id="html_74ae930971465e08c598d26fa1565089" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Downtown Brooklyn</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 89.0/100             </p>         </div>         </div>`)[0];
+                popup_07f31f5cd1023b0cb8446d5c3d2f2aae.setContent(html_74ae930971465e08c598d26fa1565089);
+            
+        
+
+        circle_9704a256706854d8392cdab98eafcc78.bindPopup(popup_07f31f5cd1023b0cb8446d5c3d2f2aae)
+        ;
+
+        
+    
+    
+            var circle_27d0450997f3aef4844cb145245571d8 = L.circle(
+                [40.762797103107104, -73.87828313892358],
+                {"bubblingMouseEvents": true, "color": "#a2c2bcff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a2c2bcff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 632.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_a203004abb2d232677f419c07ab758ab = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c3758c0196eff3b788fc25c64c3adf42 = $(`<div id="html_c3758c0196eff3b788fc25c64c3adf42" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">East Elmhurst</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 47.5/100             </p>         </div>         </div>`)[0];
+                popup_a203004abb2d232677f419c07ab758ab.setContent(html_c3758c0196eff3b788fc25c64c3adf42);
+            
+        
+
+        circle_27d0450997f3aef4844cb145245571d8.bindPopup(popup_a203004abb2d232677f419c07ab758ab)
+        ;
+
+        
+    
+    
+            var circle_10c28207871e501b09de462dd43dd716 = L.circle(
+                [40.65009769147039, -73.93667139614271],
+                {"bubblingMouseEvents": true, "color": "#fee190ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee190ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 723.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_266f392b75cbea5685ef2e2a245ef831 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e8b6b2470533367e441f14eddbf95c8a = $(`<div id="html_e8b6b2470533367e441f14eddbf95c8a" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">East Flatbush</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 60.5/100             </p>         </div>         </div>`)[0];
+                popup_266f392b75cbea5685ef2e2a245ef831.setContent(html_e8b6b2470533367e441f14eddbf95c8a);
+            
+        
+
+        circle_10c28207871e501b09de462dd43dd716.bindPopup(popup_266f392b75cbea5685ef2e2a245ef831)
+        ;
+
+        
+    
+    
+            var circle_1611a641419bae5fcba79c8ae1244b3e = L.circle(
+                [40.79545925781329, -73.94264244259317],
+                {"bubblingMouseEvents": true, "color": "#8ebbc6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8ebbc6ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 612.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_222c62fce270f1cb2df3baba84282f08 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_7fada6777280db16329fa725d7bece10 = $(`<div id="html_7fada6777280db16329fa725d7bece10" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">East Harlem</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 44.7/100             </p>         </div>         </div>`)[0];
+                popup_222c62fce270f1cb2df3baba84282f08.setContent(html_7fada6777280db16329fa725d7bece10);
+            
+        
+
+        circle_1611a641419bae5fcba79c8ae1244b3e.bindPopup(popup_222c62fce270f1cb2df3baba84282f08)
+        ;
+
+        
+    
+    
+            var circle_371019c92a9b7d7cdabc9bd2b9b1f55d = L.circle(
+                [40.66794952215299, -73.88367113746926],
+                {"bubblingMouseEvents": true, "color": "#77b3d0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#77b3d0ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 591.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_fafb9936fde0cb3dcfd79202b5b46196 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_60a0f52592aca7db5b13aad612b2480b = $(`<div id="html_60a0f52592aca7db5b13aad612b2480b" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">East New York</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 41.7/100             </p>         </div>         </div>`)[0];
+                popup_fafb9936fde0cb3dcfd79202b5b46196.setContent(html_60a0f52592aca7db5b13aad612b2480b);
+            
+        
+
+        circle_371019c92a9b7d7cdabc9bd2b9b1f55d.bindPopup(popup_fafb9936fde0cb3dcfd79202b5b46196)
+        ;
+
+        
+    
+    
+            var circle_641248ddac3e8966e18b11fbe5f20350 = L.circle(
+                [40.72691979819602, -73.98439057309962],
+                {"bubblingMouseEvents": true, "color": "#f0764aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f0764aff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 883.1, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_3c032553aa9898bcaffe6d9c493d996a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b89b16a8de27151ce05dba03607cf4a1 = $(`<div id="html_b89b16a8de27151ce05dba03607cf4a1" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">East Village</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 83.3/100             </p>         </div>         </div>`)[0];
+                popup_3c032553aa9898bcaffe6d9c493d996a.setContent(html_b89b16a8de27151ce05dba03607cf4a1);
+            
+        
+
+        circle_641248ddac3e8966e18b11fbe5f20350.bindPopup(popup_3c032553aa9898bcaffe6d9c493d996a)
+        ;
+
+        
+    
+    
+            var circle_a879ceed6685cbf87564d833108247eb = L.circle(
+                [40.73932015132955, -73.87880473581635],
+                {"bubblingMouseEvents": true, "color": "#b9cab2ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b9cab2ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 654.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_cde3a343dd2284542c3ec769f711ed5a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2c2d57f21cbf04c36f9d71a959625f67 = $(`<div id="html_2c2d57f21cbf04c36f9d71a959625f67" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Elmhurst</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 50.6/100             </p>         </div>         </div>`)[0];
+                popup_cde3a343dd2284542c3ec769f711ed5a.setContent(html_2c2d57f21cbf04c36f9d71a959625f67);
+            
+        
+
+        circle_a879ceed6685cbf87564d833108247eb.bindPopup(popup_cde3a343dd2284542c3ec769f711ed5a)
+        ;
+
+        
+    
+    
+            var circle_e2d1cfb501f112a62bdcc033d466e9c7 = L.circle(
+                [40.707004495473484, -74.00838233268318],
+                {"bubblingMouseEvents": true, "color": "#fecd82ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fecd82ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 757.1, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_1da35a849c5d0668011650ef836fa293 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_9cd6120686905857e81253412a86b5a7 = $(`<div id="html_9cd6120686905857e81253412a86b5a7" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Financial District</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 65.3/100             </p>         </div>         </div>`)[0];
+                popup_1da35a849c5d0668011650ef836fa293.setContent(html_9cd6120686905857e81253412a86b5a7);
+            
+        
+
+        circle_e2d1cfb501f112a62bdcc033d466e9c7.bindPopup(popup_1da35a849c5d0668011650ef836fa293)
+        ;
+
+        
+    
+    
+            var circle_18a7e6e1516e4fad39b57bf2cd02d03d = L.circle(
+                [40.64486241381866, -73.96020311931731],
+                {"bubblingMouseEvents": true, "color": "#f2794cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f2794cff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 879.6, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_db85aed58c3ecda834a98d6b9bd77fdb = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_140816ddf0136f51b01bbbb111c88247 = $(`<div id="html_140816ddf0136f51b01bbbb111c88247" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Flatbush</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 82.8/100             </p>         </div>         </div>`)[0];
+                popup_db85aed58c3ecda834a98d6b9bd77fdb.setContent(html_140816ddf0136f51b01bbbb111c88247);
+            
+        
+
+        circle_18a7e6e1516e4fad39b57bf2cd02d03d.bindPopup(popup_db85aed58c3ecda834a98d6b9bd77fdb)
+        ;
+
+        
+    
+    
+            var circle_f37448875d40d54e58474c2cddbc6f80 = L.circle(
+                [40.74190065782378, -73.9892064015725],
+                {"bubblingMouseEvents": true, "color": "#a0c1bdff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a0c1bdff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 630.4000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_e3efd4bef17afbe46f138484609aeaa0 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_3b77d3eed49887b457938af7ecac66e0 = $(`<div id="html_3b77d3eed49887b457938af7ecac66e0" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Flatiron District</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 47.2/100             </p>         </div>         </div>`)[0];
+                popup_e3efd4bef17afbe46f138484609aeaa0.setContent(html_3b77d3eed49887b457938af7ecac66e0);
+            
+        
+
+        circle_f37448875d40d54e58474c2cddbc6f80.bindPopup(popup_e3efd4bef17afbe46f138484609aeaa0)
+        ;
+
+        
+    
+    
+            var circle_093523b51273d447fb091cd921f3729a = L.circle(
+                [40.62518917170987, -73.93115469319437],
+                {"bubblingMouseEvents": true, "color": "#e4da9eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e4da9eff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 694.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_d3106389db43a1fd368a07bae9575990 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_53fdd18c8dae0968235d9c30407f7bab = $(`<div id="html_53fdd18c8dae0968235d9c30407f7bab" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Flatlands</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 56.4/100             </p>         </div>         </div>`)[0];
+                popup_d3106389db43a1fd368a07bae9575990.setContent(html_53fdd18c8dae0968235d9c30407f7bab);
+            
+        
+
+        circle_093523b51273d447fb091cd921f3729a.bindPopup(popup_d3106389db43a1fd368a07bae9575990)
+        ;
+
+        
+    
+    
+            var circle_1e58f5c2ef5c74951d94d1a258206250 = L.circle(
+                [40.754262103812444, -73.82020877754225],
+                {"bubblingMouseEvents": true, "color": "#fed185ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed185ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 749.4000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_90c2c581a2d28c578c1d1a1295756f56 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_5e958aa432883e27458f7fc3e6474164 = $(`<div id="html_5e958aa432883e27458f7fc3e6474164" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Flushing</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 64.2/100             </p>         </div>         </div>`)[0];
+                popup_90c2c581a2d28c578c1d1a1295756f56.setContent(html_5e958aa432883e27458f7fc3e6474164);
+            
+        
+
+        circle_1e58f5c2ef5c74951d94d1a258206250.bindPopup(popup_90c2c581a2d28c578c1d1a1295756f56)
+        ;
+
+        
+    
+    
+            var circle_7589bcf2ced1bef6bed11d341ef2e7f6 = L.circle(
+                [40.861818769872265, -73.89607440728565],
+                {"bubblingMouseEvents": true, "color": "#2f80bcff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2f80bcff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 435.1, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_627ab033e8103a540b087f36f7a4d995 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_9b12839ee1226eb0d7153bcebf559353 = $(`<div id="html_9b12839ee1226eb0d7153bcebf559353" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Fordham</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 19.3/100             </p>         </div>         </div>`)[0];
+                popup_627ab033e8103a540b087f36f7a4d995.setContent(html_9b12839ee1226eb0d7153bcebf559353);
+            
+        
+
+        circle_7589bcf2ced1bef6bed11d341ef2e7f6.bindPopup(popup_627ab033e8103a540b087f36f7a4d995)
+        ;
+
+        
+    
+    
+            var circle_ffe36633dba37e6c23b7746bad05ce04 = L.circle(
+                [40.721306995435285, -73.84716021386201],
+                {"bubblingMouseEvents": true, "color": "#fdad6eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fdad6eff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 808.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_d920e2516cbe1c9bfd53866f3edce9cd = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_557661842f43545fb617d3649f40ba3f = $(`<div id="html_557661842f43545fb617d3649f40ba3f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Forest Hills</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 72.6/100             </p>         </div>         </div>`)[0];
+                popup_d920e2516cbe1c9bfd53866f3edce9cd.setContent(html_557661842f43545fb617d3649f40ba3f);
+            
+        
+
+        circle_ffe36633dba37e6c23b7746bad05ce04.bindPopup(popup_d920e2516cbe1c9bfd53866f3edce9cd)
+        ;
+
+        
+    
+    
+            var circle_bc190fec3adeb450038871293a3768b2 = L.circle(
+                [40.690160574876955, -73.97416432927176],
+                {"bubblingMouseEvents": true, "color": "#b40100ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b40100ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 998.6, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_32427f571c6d5f254a7ef94cb06f5206 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b47dab731e2e011642ca3816d31853af = $(`<div id="html_b47dab731e2e011642ca3816d31853af" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Fort Greene</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 99.8/100             </p>         </div>         </div>`)[0];
+                popup_32427f571c6d5f254a7ef94cb06f5206.setContent(html_b47dab731e2e011642ca3816d31853af);
+            
+        
+
+        circle_bc190fec3adeb450038871293a3768b2.bindPopup(popup_32427f571c6d5f254a7ef94cb06f5206)
+        ;
+
+        
+    
+    
+            var circle_60526ac0f8adbad22324c38417d9dd50 = L.circle(
+                [40.61860362380933, -74.03233178333818],
+                {"bubblingMouseEvents": true, "color": "#feba76ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feba76ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 786.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_f968ed84f95ae0ec41a9371ac86d360a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_49d7b4882711229eff2bf207b6a50920 = $(`<div id="html_49d7b4882711229eff2bf207b6a50920" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Fort Hamilton</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 69.5/100             </p>         </div>         </div>`)[0];
+                popup_f968ed84f95ae0ec41a9371ac86d360a.setContent(html_49d7b4882711229eff2bf207b6a50920);
+            
+        
+
+        circle_60526ac0f8adbad22324c38417d9dd50.bindPopup(popup_f968ed84f95ae0ec41a9371ac86d360a)
+        ;
+
+        
+    
+    
+            var circle_7527301dd5bdabeb10db8693ab44d575 = L.circle(
+                [40.67584992967938, -73.98859121334571],
+                {"bubblingMouseEvents": true, "color": "#f0764aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f0764aff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 883.1, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_2f6c6a96f2b7f9f44dc93f54f8aaf334 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_669d198f8c3db23bfab81aa5b767a462 = $(`<div id="html_669d198f8c3db23bfab81aa5b767a462" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Gowanus</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 83.3/100             </p>         </div>         </div>`)[0];
+                popup_2f6c6a96f2b7f9f44dc93f54f8aaf334.setContent(html_669d198f8c3db23bfab81aa5b767a462);
+            
+        
+
+        circle_7527301dd5bdabeb10db8693ab44d575.bindPopup(popup_2f6c6a96f2b7f9f44dc93f54f8aaf334)
+        ;
+
+        
+    
+    
+            var circle_1c92e2f798256c06edd2c0f585c1321a = L.circle(
+                [40.73519002027402, -73.98465560328013],
+                {"bubblingMouseEvents": true, "color": "#fec57dff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec57dff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 769.6999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_b38c3e1c186386b0fb1f94321c627fa8 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f7bba0b17041ea48d4c2e3809d957fcc = $(`<div id="html_f7bba0b17041ea48d4c2e3809d957fcc" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Gramercy</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 67.1/100             </p>         </div>         </div>`)[0];
+                popup_b38c3e1c186386b0fb1f94321c627fa8.setContent(html_f7bba0b17041ea48d4c2e3809d957fcc);
+            
+        
+
+        circle_1c92e2f798256c06edd2c0f585c1321a.bindPopup(popup_b38c3e1c186386b0fb1f94321c627fa8)
+        ;
+
+        
+    
+    
+            var circle_3e1c9f4440c76bfb6b296f4e30e4e398 = L.circle(
+                [40.59791057999904, -73.98133963064373],
+                {"bubblingMouseEvents": true, "color": "#d1d3a7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d1d3a7ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 676.5999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_f889b612efdb1e6ed84b8a771158ad0b = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_500aeb6af11a969b1eada3da0e136b15 = $(`<div id="html_500aeb6af11a969b1eada3da0e136b15" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Gravesend</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 53.8/100             </p>         </div>         </div>`)[0];
+                popup_f889b612efdb1e6ed84b8a771158ad0b.setContent(html_500aeb6af11a969b1eada3da0e136b15);
+            
+        
+
+        circle_3e1c9f4440c76bfb6b296f4e30e4e398.bindPopup(popup_f889b612efdb1e6ed84b8a771158ad0b)
+        ;
+
+        
+    
+    
+            var circle_785229cd2ae61859367dffcaac8225c0 = L.circle(
+                [40.551685283333335, -74.14944793333333],
+                {"bubblingMouseEvents": true, "color": "#4390c5ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4390c5ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 483.4, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_63844a7e78ac1a198e6aa8073369b4fd = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f5765d2f6d84c82c7a79461a75091d7a = $(`<div id="html_f5765d2f6d84c82c7a79461a75091d7a" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Great Kills</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 26.2/100             </p>         </div>         </div>`)[0];
+                popup_63844a7e78ac1a198e6aa8073369b4fd.setContent(html_f5765d2f6d84c82c7a79461a75091d7a);
+            
+        
+
+        circle_785229cd2ae61859367dffcaac8225c0.bindPopup(popup_63844a7e78ac1a198e6aa8073369b4fd)
+        ;
+
+        
+    
+    
+            var circle_72cdb330e7bd36463815fb1724c4b810 = L.circle(
+                [40.72829408102339, -73.95157554173748],
+                {"bubblingMouseEvents": true, "color": "#c0180fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c0180fff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 976.1999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_aa423b741cc72b5ee1c2799e11531d1e = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_96d640bafe8b5e440f4ba91bd0ef1fdd = $(`<div id="html_96d640bafe8b5e440f4ba91bd0ef1fdd" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Greenpoint</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 96.6/100             </p>         </div>         </div>`)[0];
+                popup_aa423b741cc72b5ee1c2799e11531d1e.setContent(html_96d640bafe8b5e440f4ba91bd0ef1fdd);
+            
+        
+
+        circle_72cdb330e7bd36463815fb1724c4b810.bindPopup(popup_aa423b741cc72b5ee1c2799e11531d1e)
+        ;
+
+        
+    
+    
+            var circle_9d671943570aacc9b3cbdb05cafbca22 = L.circle(
+                [40.73138591232035, -73.9977883947953],
+                {"bubblingMouseEvents": true, "color": "#c92a1aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c92a1aff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 958.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_1e76228ae1c7b1e80f8367bdfaffae3c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_1e74cdd641c3ec787aae51a7725a366c = $(`<div id="html_1e74cdd641c3ec787aae51a7725a366c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Greenwich Village</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 94.0/100             </p>         </div>         </div>`)[0];
+                popup_1e76228ae1c7b1e80f8367bdfaffae3c.setContent(html_1e74cdd641c3ec787aae51a7725a366c);
+            
+        
+
+        circle_9d671943570aacc9b3cbdb05cafbca22.bindPopup(popup_1e76228ae1c7b1e80f8367bdfaffae3c)
+        ;
+
+        
+    
+    
+            var circle_53d59b62d485bcb4b37f461ab6aa4ec3 = L.circle(
+                [40.81505150918803, -73.94781813406092],
+                {"bubblingMouseEvents": true, "color": "#e0d8a0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e0d8a0ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 690.5999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_26c71aa48a02b7636a57d28afdbba447 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_26a2cd3ac5ad9eb42b63a9a300595b24 = $(`<div id="html_26a2cd3ac5ad9eb42b63a9a300595b24" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Harlem</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 55.8/100             </p>         </div>         </div>`)[0];
+                popup_26c71aa48a02b7636a57d28afdbba447.setContent(html_26a2cd3ac5ad9eb42b63a9a300595b24);
+            
+        
+
+        circle_53d59b62d485bcb4b37f461ab6aa4ec3.bindPopup(popup_26c71aa48a02b7636a57d28afdbba447)
+        ;
+
+        
+    
+    
+            var circle_088466188c6fc669ffed55b87ba5dd46 = L.circle(
+                [40.7613117622426, -73.9922810140711],
+                {"bubblingMouseEvents": true, "color": "#e8db9bff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e8db9bff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 699.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_4cfe2bd997eb0aaa0bf1d4b9ab499a83 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_18a2aaa7a00330e898388945f74db69b = $(`<div id="html_18a2aaa7a00330e898388945f74db69b" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Hell's Kitchen</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 57.0/100             </p>         </div>         </div>`)[0];
+                popup_4cfe2bd997eb0aaa0bf1d4b9ab499a83.setContent(html_18a2aaa7a00330e898388945f74db69b);
+            
+        
+
+        circle_088466188c6fc669ffed55b87ba5dd46.bindPopup(popup_4cfe2bd997eb0aaa0bf1d4b9ab499a83)
+        ;
+
+        
+    
+    
+            var circle_caf550ec092f21bf188ac6ace5d7607d = L.circle(
+                [40.661294291304095, -73.84442069811307],
+                {"bubblingMouseEvents": true, "color": "#95bdc3ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#95bdc3ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 619.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_de463f1e3b3b6236b3fdb490591ef11e = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e910d1bd0fd7ecab243e3e444ad70dae = $(`<div id="html_e910d1bd0fd7ecab243e3e444ad70dae" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Howard Beach</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 45.7/100             </p>         </div>         </div>`)[0];
+                popup_de463f1e3b3b6236b3fdb490591ef11e.setContent(html_e910d1bd0fd7ecab243e3e444ad70dae);
+            
+        
+
+        circle_caf550ec092f21bf188ac6ace5d7607d.bindPopup(popup_de463f1e3b3b6236b3fdb490591ef11e)
+        ;
+
+        
+    
+    
+            var circle_dc9c466c7c0f023115a360f9909ec8be = L.circle(
+                [40.865376676072664, -73.92409392108193],
+                {"bubblingMouseEvents": true, "color": "#d3d4a6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d3d4a6ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 678.7, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_c97f8c68c3f3854bb60db04ceab5b9d5 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e0048b0cbe8ea6bbe21fb0b2438be40e = $(`<div id="html_e0048b0cbe8ea6bbe21fb0b2438be40e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Inwood</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 54.1/100             </p>         </div>         </div>`)[0];
+                popup_c97f8c68c3f3854bb60db04ceab5b9d5.setContent(html_e0048b0cbe8ea6bbe21fb0b2438be40e);
+            
+        
+
+        circle_dc9c466c7c0f023115a360f9909ec8be.bindPopup(popup_c97f8c68c3f3854bb60db04ceab5b9d5)
+        ;
+
+        
+    
+    
+            var circle_1a3d2a75410b383b587cccf6da8f7f73 = L.circle(
+                [40.751792678768496, -73.88167544886724],
+                {"bubblingMouseEvents": true, "color": "#e8db9bff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e8db9bff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 699.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_3e8e099a6e42ffc4e191bdbf9c0ec2c6 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_8d2c5d45f85d37690b7df945cc6805ac = $(`<div id="html_8d2c5d45f85d37690b7df945cc6805ac" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Jackson Heights</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 57.0/100             </p>         </div>         </div>`)[0];
+                popup_3e8e099a6e42ffc4e191bdbf9c0ec2c6.setContent(html_8d2c5d45f85d37690b7df945cc6805ac);
+            
+        
+
+        circle_1a3d2a75410b383b587cccf6da8f7f73.bindPopup(popup_3e8e099a6e42ffc4e191bdbf9c0ec2c6)
+        ;
+
+        
+    
+    
+            var circle_e53c360ce1970bed2db4e0cb3d5c9d72 = L.circle(
+                [40.686583845538536, -73.78658504395138],
+                {"bubblingMouseEvents": true, "color": "#88b9c9ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#88b9c9ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 607.3, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_50dee190648e192beb301069c27fb365 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2389c95171ae840f49cdbd057360e49e = $(`<div id="html_2389c95171ae840f49cdbd057360e49e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Jamaica</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 43.9/100             </p>         </div>         </div>`)[0];
+                popup_50dee190648e192beb301069c27fb365.setContent(html_2389c95171ae840f49cdbd057360e49e);
+            
+        
+
+        circle_e53c360ce1970bed2db4e0cb3d5c9d72.bindPopup(popup_50dee190648e192beb301069c27fb365)
+        ;
+
+        
+    
+    
+            var circle_78f975de2d568a573e69ee5cfabac2b5 = L.circle(
+                [40.64101680116861, -73.97594896686019],
+                {"bubblingMouseEvents": true, "color": "#fee391ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee391ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 720.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_6b6791d79bf5615a8e54e44bb306956c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_8214b04c80319ad32aae85345a646a0d = $(`<div id="html_8214b04c80319ad32aae85345a646a0d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Kensington</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 60.0/100             </p>         </div>         </div>`)[0];
+                popup_6b6791d79bf5615a8e54e44bb306956c.setContent(html_8214b04c80319ad32aae85345a646a0d);
+            
+        
+
+        circle_78f975de2d568a573e69ee5cfabac2b5.bindPopup(popup_6b6791d79bf5615a8e54e44bb306956c)
+        ;
+
+        
+    
+    
+            var circle_bfe42630f6e4124b7065fa44666ae46e = L.circle(
+                [40.70781436939371, -73.83048138268293],
+                {"bubblingMouseEvents": true, "color": "#4491c6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4491c6ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 486.9, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_1147aecafc9cca81c467741d8b920dc9 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_5d6a0732302d56c85b9880caf5025dd2 = $(`<div id="html_5d6a0732302d56c85b9880caf5025dd2" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Kew Gardens</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 26.7/100             </p>         </div>         </div>`)[0];
+                popup_1147aecafc9cca81c467741d8b920dc9.setContent(html_5d6a0732302d56c85b9880caf5025dd2);
+            
+        
+
+        circle_bfe42630f6e4124b7065fa44666ae46e.bindPopup(popup_1147aecafc9cca81c467741d8b920dc9)
+        ;
+
+        
+    
+    
+            var circle_882f59970054ff5b2238a0fe2b58dce8 = L.circle(
+                [40.87621606119384, -73.90190059165421],
+                {"bubblingMouseEvents": true, "color": "#96bec2ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#96bec2ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 621.3, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_2aaa50d39fe4aacfb0a698f0d5138878 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c453feae8d18fd04f49825c8e0e8d275 = $(`<div id="html_c453feae8d18fd04f49825c8e0e8d275" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Kingsbridge</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 45.9/100             </p>         </div>         </div>`)[0];
+                popup_2aaa50d39fe4aacfb0a698f0d5138878.setContent(html_c453feae8d18fd04f49825c8e0e8d275);
+            
+        
+
+        circle_882f59970054ff5b2238a0fe2b58dce8.bindPopup(popup_2aaa50d39fe4aacfb0a698f0d5138878)
+        ;
+
+        
+    
+    
+            var circle_f47698048bbedd284034200a35bfafac = L.circle(
+                [40.74186223008267, -73.97915786015325],
+                {"bubblingMouseEvents": true, "color": "#fda86aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fda86aff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 816.6, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_440de8c246547725dc6e418620682e23 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_87b7c9d1c712e7dc8bdfc9df0475cd4c = $(`<div id="html_87b7c9d1c712e7dc8bdfc9df0475cd4c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Kips Bay</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 73.8/100             </p>         </div>         </div>`)[0];
+                popup_440de8c246547725dc6e418620682e23.setContent(html_87b7c9d1c712e7dc8bdfc9df0475cd4c);
+            
+        
+
+        circle_f47698048bbedd284034200a35bfafac.bindPopup(popup_440de8c246547725dc6e418620682e23)
+        ;
+
+        
+    
+    
+            var circle_890757aa9c37e743cf42e3120390a41b = L.circle(
+                [40.67554327528271, -73.74310687766172],
+                {"bubblingMouseEvents": true, "color": "#ded8a0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ded8a0ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 689.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_cc79f373fdb58102656f51cec60e1e01 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2cc498d540841ee9f3c34eba7004140e = $(`<div id="html_2cc498d540841ee9f3c34eba7004140e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Laurelton</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 55.6/100             </p>         </div>         </div>`)[0];
+                popup_cc79f373fdb58102656f51cec60e1e01.setContent(html_2cc498d540841ee9f3c34eba7004140e);
+            
+        
+
+        circle_890757aa9c37e743cf42e3120390a41b.bindPopup(popup_cc79f373fdb58102656f51cec60e1e01)
+        ;
+
+        
+    
+    
+            var circle_f1bd8c4fc3999ae818c3a670faf726a3 = L.circle(
+                [40.75181126342936, -73.93953679145245],
+                {"bubblingMouseEvents": true, "color": "#d4d4a5ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d4d4a5ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 680.0999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_e3adb90fce2874034c481b5254bff488 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e104db90fa1d65e664362562811c67fd = $(`<div id="html_e104db90fa1d65e664362562811c67fd" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Long Island City</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 54.3/100             </p>         </div>         </div>`)[0];
+                popup_e3adb90fce2874034c481b5254bff488.setContent(html_e104db90fa1d65e664362562811c67fd);
+            
+        
+
+        circle_f1bd8c4fc3999ae818c3a670faf726a3.bindPopup(popup_e3adb90fce2874034c481b5254bff488)
+        ;
+
+        
+    
+    
+            var circle_5d696eae813d345d8af4801c1d4e574d = L.circle(
+                [40.81951543148536, -73.90328473305595],
+                {"bubblingMouseEvents": true, "color": "#bfcdafff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bfcdafff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 659.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_2ddbe890bf9809a2e7dcbb427d1d25af = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_200beff7381a0cfa6d14057cc82faed1 = $(`<div id="html_200beff7381a0cfa6d14057cc82faed1" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Longwood</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 51.4/100             </p>         </div>         </div>`)[0];
+                popup_2ddbe890bf9809a2e7dcbb427d1d25af.setContent(html_200beff7381a0cfa6d14057cc82faed1);
+            
+        
+
+        circle_5d696eae813d345d8af4801c1d4e574d.bindPopup(popup_2ddbe890bf9809a2e7dcbb427d1d25af)
+        ;
+
+        
+    
+    
+            var circle_124a0b4c6293ad792193acfb0b0be5a9 = L.circle(
+                [40.71896144536461, -73.9886317363585],
+                {"bubblingMouseEvents": true, "color": "#feb976ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feb976ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 788.5999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_be3c7a01269454392831f816da91547f = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b09b3ccbdf880d7adcb70837d6b33703 = $(`<div id="html_b09b3ccbdf880d7adcb70837d6b33703" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Lower East Side</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 69.8/100             </p>         </div>         </div>`)[0];
+                popup_be3c7a01269454392831f816da91547f.setContent(html_b09b3ccbdf880d7adcb70837d6b33703);
+            
+        
+
+        circle_124a0b4c6293ad792193acfb0b0be5a9.bindPopup(popup_be3c7a01269454392831f816da91547f)
+        ;
+
+        
+    
+    
+            var circle_968d23e98a430da93817e011a7496777 = L.circle(
+                [40.72777298596348, -73.90103719632306],
+                {"bubblingMouseEvents": true, "color": "#c3ceadff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c3ceadff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 663.3, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_7f77dd2e162febc4d2cd9e94f2c52bfb = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_8d3e28da06fcfe1d3ec9bd5a8c12e69b = $(`<div id="html_8d3e28da06fcfe1d3ec9bd5a8c12e69b" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Maspeth</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 51.9/100             </p>         </div>         </div>`)[0];
+                popup_7f77dd2e162febc4d2cd9e94f2c52bfb.setContent(html_8d3e28da06fcfe1d3ec9bd5a8c12e69b);
+            
+        
+
+        circle_968d23e98a430da93817e011a7496777.bindPopup(popup_7f77dd2e162febc4d2cd9e94f2c52bfb)
+        ;
+
+        
+    
+    
+            var circle_2d033badcaf64af576c1977df5c9cc67 = L.circle(
+                [40.75417786886611, -73.97849000670612],
+                {"bubblingMouseEvents": true, "color": "#75b2d1ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#75b2d1ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 589.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_8bea5b73d7f61fad9442ed4a6064cc5c = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_d6a2a3f8360f453a74cba6507b5f236a = $(`<div id="html_d6a2a3f8360f453a74cba6507b5f236a" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Midtown</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 41.4/100             </p>         </div>         </div>`)[0];
+                popup_8bea5b73d7f61fad9442ed4a6064cc5c.setContent(html_d6a2a3f8360f453a74cba6507b5f236a);
+            
+        
+
+        circle_2d033badcaf64af576c1977df5c9cc67.bindPopup(popup_8bea5b73d7f61fad9442ed4a6064cc5c)
+        ;
+
+        
+    
+    
+            var circle_aab336aed0e06e7195ac3e763fa52d0a = L.circle(
+                [40.61955466716518, -73.95976890365357],
+                {"bubblingMouseEvents": true, "color": "#fdaa6cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fdaa6cff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 813.1, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_30038c31edac15b12a5951c2387a3d9f = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_d0ce364569c6c0b25966b3bf360af2dd = $(`<div id="html_d0ce364569c6c0b25966b3bf360af2dd" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Midwood</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 73.3/100             </p>         </div>         </div>`)[0];
+                popup_30038c31edac15b12a5951c2387a3d9f.setContent(html_d0ce364569c6c0b25966b3bf360af2dd);
+            
+        
+
+        circle_aab336aed0e06e7195ac3e763fa52d0a.bindPopup(popup_30038c31edac15b12a5951c2387a3d9f)
+        ;
+
+        
+    
+    
+            var circle_7c8bd047c0a81caa8f2c1976a770e046 = L.circle(
+                [40.807692470907945, -73.96137158914813],
+                {"bubblingMouseEvents": true, "color": "#fa8956ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fa8956ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 864.1999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_ec4d0666fe690c868d98494114f3afd7 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c5e85f43b310085123c548f27c70e8f1 = $(`<div id="html_c5e85f43b310085123c548f27c70e8f1" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Morningside Heights</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 80.6/100             </p>         </div>         </div>`)[0];
+                popup_ec4d0666fe690c868d98494114f3afd7.setContent(html_c5e85f43b310085123c548f27c70e8f1);
+            
+        
+
+        circle_7c8bd047c0a81caa8f2c1976a770e046.bindPopup(popup_ec4d0666fe690c868d98494114f3afd7)
+        ;
+
+        
+    
+    
+            var circle_0aee651a605dba9c584a9b6a9ccb0e88 = L.circle(
+                [40.85001570233705, -73.918645306997],
+                {"bubblingMouseEvents": true, "color": "#2e7ebbff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2e7ebbff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 429.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_38092d7cbf806dcf88cbac05dad9e58a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_0eb6a46d66eb8b2dd16e706420bd21d7 = $(`<div id="html_0eb6a46d66eb8b2dd16e706420bd21d7" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Morris Heights</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 18.5/100             </p>         </div>         </div>`)[0];
+                popup_38092d7cbf806dcf88cbac05dad9e58a.setContent(html_0eb6a46d66eb8b2dd16e706420bd21d7);
+            
+        
+
+        circle_0aee651a605dba9c584a9b6a9ccb0e88.bindPopup(popup_38092d7cbf806dcf88cbac05dad9e58a)
+        ;
+
+        
+    
+    
+            var circle_6608c52e105ae5ef843ab3c0bedf8d09 = L.circle(
+                [40.850948211232634, -73.85452093031142],
+                {"bubblingMouseEvents": true, "color": "#e55f3cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e55f3cff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 905.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_a40841e68ec72383e5c965cb8b231632 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_a8141f7d332aebeea001d3f515f4d24e = $(`<div id="html_a8141f7d332aebeea001d3f515f4d24e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Morris Park</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 86.5/100             </p>         </div>         </div>`)[0];
+                popup_a40841e68ec72383e5c965cb8b231632.setContent(html_a8141f7d332aebeea001d3f515f4d24e);
+            
+        
+
+        circle_6608c52e105ae5ef843ab3c0bedf8d09.bindPopup(popup_a40841e68ec72383e5c965cb8b231632)
+        ;
+
+        
+    
+    
+            var circle_29254879052858c4136563fd8338db79 = L.circle(
+                [40.81063482121538, -73.91955134475077],
+                {"bubblingMouseEvents": true, "color": "#a9c5b9ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a9c5b9ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 638.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_4f78c2a67e510a2f3cd6ec9f7f01e573 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_d144fde218454cb484517aac714db16a = $(`<div id="html_d144fde218454cb484517aac714db16a" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Mott Haven</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 48.4/100             </p>         </div>         </div>`)[0];
+                popup_4f78c2a67e510a2f3cd6ec9f7f01e573.setContent(html_d144fde218454cb484517aac714db16a);
+            
+        
+
+        circle_29254879052858c4136563fd8338db79.bindPopup(popup_4f78c2a67e510a2f3cd6ec9f7f01e573)
+        ;
+
+        
+    
+    
+            var circle_bd4cc6a78451ec76bd8128e044a91a23 = L.circle(
+                [40.847888820089864, -73.9061104813824],
+                {"bubblingMouseEvents": true, "color": "#206fb0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#206fb0ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 384.7, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_300fccf0ad00df0b3e6d17e750c0961a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_0591c53ae93047af64ea37dff6d408dd = $(`<div id="html_0591c53ae93047af64ea37dff6d408dd" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Mount Hope</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 12.1/100             </p>         </div>         </div>`)[0];
+                popup_300fccf0ad00df0b3e6d17e750c0961a.setContent(html_0591c53ae93047af64ea37dff6d408dd);
+            
+        
+
+        circle_bd4cc6a78451ec76bd8128e044a91a23.bindPopup(popup_300fccf0ad00df0b3e6d17e750c0961a)
+        ;
+
+        
+    
+    
+            var circle_9259c838b9e42545c4792141e7790ddc = L.circle(
+                [40.74821682077074, -73.9769778727372],
+                {"bubblingMouseEvents": true, "color": "#fd945dff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd945dff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 849.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_cdec097c38b759e9c9bd82e6bfedc390 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_449df1eb09bed8fa7140d2ff79897695 = $(`<div id="html_449df1eb09bed8fa7140d2ff79897695" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Murray Hill</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 78.5/100             </p>         </div>         </div>`)[0];
+                popup_cdec097c38b759e9c9bd82e6bfedc390.setContent(html_449df1eb09bed8fa7140d2ff79897695);
+            
+        
+
+        circle_9259c838b9e42545c4792141e7790ddc.bindPopup(popup_cdec097c38b759e9c9bd82e6bfedc390)
+        ;
+
+        
+    
+    
+            var circle_860723e22e652fba21ef89d7e00de2bd = L.circle(
+                [40.72658005180226, -73.99293092491288],
+                {"bubblingMouseEvents": true, "color": "#febd78ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#febd78ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 783.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_f58989472310b7dd967d935755cd4731 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_cd5ce18588ea44cf91e79f87ca6168f1 = $(`<div id="html_cd5ce18588ea44cf91e79f87ca6168f1" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">NoHo</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 69.0/100             </p>         </div>         </div>`)[0];
+                popup_f58989472310b7dd967d935755cd4731.setContent(html_cd5ce18588ea44cf91e79f87ca6168f1);
+            
+        
+
+        circle_860723e22e652fba21ef89d7e00de2bd.bindPopup(popup_f58989472310b7dd967d935755cd4731)
+        ;
+
+        
+    
+    
+            var circle_c778d3ced0c8e67cb2867ba77981fac8 = L.circle(
+                [40.72218425562969, -73.99482744196331],
+                {"bubblingMouseEvents": true, "color": "#d6432aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#d6432aff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 933.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_776275f39d6b912f8747482c46eee071 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_d99d2f2020dd2e62bbb7619f3ec2266a = $(`<div id="html_d99d2f2020dd2e62bbb7619f3ec2266a" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Nolita</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 90.5/100             </p>         </div>         </div>`)[0];
+                popup_776275f39d6b912f8747482c46eee071.setContent(html_d99d2f2020dd2e62bbb7619f3ec2266a);
+            
+        
+
+        circle_c778d3ced0c8e67cb2867ba77981fac8.bindPopup(popup_776275f39d6b912f8747482c46eee071)
+        ;
+
+        
+    
+    
+            var circle_3669a6b47c23004ea665392a1a3baaed = L.circle(
+                [40.67969281804726, -73.8490508733486],
+                {"bubblingMouseEvents": true, "color": "#5ea5d1ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#5ea5d1ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 549.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_8b9990c7c1af16f27e3a8f57f8cc2378 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_68ef0976349f4e8fcd7556568338b426 = $(`<div id="html_68ef0976349f4e8fcd7556568338b426" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Ozone Park</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 35.7/100             </p>         </div>         </div>`)[0];
+                popup_8b9990c7c1af16f27e3a8f57f8cc2378.setContent(html_68ef0976349f4e8fcd7556568338b426);
+            
+        
+
+        circle_3669a6b47c23004ea665392a1a3baaed.bindPopup(popup_8b9990c7c1af16f27e3a8f57f8cc2378)
+        ;
+
+        
+    
+    
+            var circle_f7d882722edbd642d219e2d4ae9a4c98 = L.circle(
+                [40.67407462284632, -73.97924835076957],
+                {"bubblingMouseEvents": true, "color": "#b30000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b30000ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 1000.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_5360b74980687b0c86f68636555aa452 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e0dcdb0e18000a161b8b09ea72dfa09f = $(`<div id="html_e0dcdb0e18000a161b8b09ea72dfa09f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Park Slope</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 100.0/100             </p>         </div>         </div>`)[0];
+                popup_5360b74980687b0c86f68636555aa452.setContent(html_e0dcdb0e18000a161b8b09ea72dfa09f);
+            
+        
+
+        circle_f7d882722edbd642d219e2d4ae9a4c98.bindPopup(popup_5360b74980687b0c86f68636555aa452)
+        ;
+
+        
+    
+    
+            var circle_e601a8fd83b8b6537693ad1db0c115c9 = L.circle(
+                [40.67782197510301, -73.96787873803224],
+                {"bubblingMouseEvents": true, "color": "#b30000ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b30000ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 1000.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_bdf099bca0ed8a57efcb7d3d0cdbb839 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_276760a28ec5be412932e05efd87c103 = $(`<div id="html_276760a28ec5be412932e05efd87c103" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Prospect Heights</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 100.0/100             </p>         </div>         </div>`)[0];
+                popup_bdf099bca0ed8a57efcb7d3d0cdbb839.setContent(html_276760a28ec5be412932e05efd87c103);
+            
+        
+
+        circle_e601a8fd83b8b6537693ad1db0c115c9.bindPopup(popup_bdf099bca0ed8a57efcb7d3d0cdbb839)
+        ;
+
+        
+    
+    
+            var circle_c5ad531cae0e4b98a9b7b5ca039dd6b4 = L.circle(
+                [40.65927982971097, -73.95367326025305],
+                {"bubblingMouseEvents": true, "color": "#f57f50ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f57f50ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 874.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_0c5ebefb813b7117357d99c615d2c112 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_9753f6e6852209ff32f9188e87127694 = $(`<div id="html_9753f6e6852209ff32f9188e87127694" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Prospect-Lefferts Gardens</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 82.0/100             </p>         </div>         </div>`)[0];
+                popup_0c5ebefb813b7117357d99c615d2c112.setContent(html_9753f6e6852209ff32f9188e87127694);
+            
+        
+
+        circle_c5ad531cae0e4b98a9b7b5ca039dd6b4.bindPopup(popup_0c5ebefb813b7117357d99c615d2c112)
+        ;
+
+        
+    
+    
+            var circle_1ca39ead77a6a86a8c3592c907e0a51e = L.circle(
+                [40.71249535015123, -73.74151726563203],
+                {"bubblingMouseEvents": true, "color": "#7fb5cdff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7fb5cdff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 598.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_043da31a23ef220b3c8f6a799d510d2b = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b62d7220fb9c5217dcdb0259d3e7580b = $(`<div id="html_b62d7220fb9c5217dcdb0259d3e7580b" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Queens Village</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 42.7/100             </p>         </div>         </div>`)[0];
+                popup_043da31a23ef220b3c8f6a799d510d2b.setContent(html_b62d7220fb9c5217dcdb0259d3e7580b);
+            
+        
+
+        circle_1ca39ead77a6a86a8c3592c907e0a51e.bindPopup(popup_043da31a23ef220b3c8f6a799d510d2b)
+        ;
+
+        
+    
+    
+            var circle_2198ebe9fc85e6a3c0682490de8509eb = L.circle(
+                [40.67685405177496, -74.01028968470717],
+                {"bubblingMouseEvents": true, "color": "#fed286ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed286ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 748.6999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_e2e1a2aea4442dd78817cc8f38841204 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_40ca2a2532620d9d480f7a713a2d9a17 = $(`<div id="html_40ca2a2532620d9d480f7a713a2d9a17" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Red Hook</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 64.1/100             </p>         </div>         </div>`)[0];
+                popup_e2e1a2aea4442dd78817cc8f38841204.setContent(html_40ca2a2532620d9d480f7a713a2d9a17);
+            
+        
+
+        circle_2198ebe9fc85e6a3c0682490de8509eb.bindPopup(popup_e2e1a2aea4442dd78817cc8f38841204)
+        ;
+
+        
+    
+    
+            var circle_e2993172f87cdad54925ad1d0fb1bc0b = L.circle(
+                [40.7273157494226, -73.85972879324729],
+                {"bubblingMouseEvents": true, "color": "#ef7449ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ef7449ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 885.1999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_d5bd04274758184641a2e64eeaadabdc = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e074f56c38ae5a35873ae1d15146d916 = $(`<div id="html_e074f56c38ae5a35873ae1d15146d916" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Rego Park</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 83.6/100             </p>         </div>         </div>`)[0];
+                popup_d5bd04274758184641a2e64eeaadabdc.setContent(html_e074f56c38ae5a35873ae1d15146d916);
+            
+        
+
+        circle_e2993172f87cdad54925ad1d0fb1bc0b.bindPopup(popup_d5bd04274758184641a2e64eeaadabdc)
+        ;
+
+        
+    
+    
+            var circle_764fcfa09bd13832ac53a5cf3c21771a = L.circle(
+                [40.693959108102085, -73.8310009252489],
+                {"bubblingMouseEvents": true, "color": "#fedf8eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fedf8eff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 727.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_f83cfc698447197e993b9ac98b332036 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_410cdf78d1d4b35a7aec00a4c8218998 = $(`<div id="html_410cdf78d1d4b35a7aec00a4c8218998" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Richmond Hill</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 61.0/100             </p>         </div>         </div>`)[0];
+                popup_f83cfc698447197e993b9ac98b332036.setContent(html_410cdf78d1d4b35a7aec00a4c8218998);
+            
+        
+
+        circle_764fcfa09bd13832ac53a5cf3c21771a.bindPopup(popup_f83cfc698447197e993b9ac98b332036)
+        ;
+
+        
+    
+    
+            var circle_08e561af5a96685c4c06bd63d6b529ee = L.circle(
+                [40.70386842851597, -73.90482159401627],
+                {"bubblingMouseEvents": true, "color": "#fd8f5aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd8f5aff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 857.1999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_a785fee172ec65585a97a2e2a0b78a76 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_7962f3c7e6797f6f7a6ac49fad7522b8 = $(`<div id="html_7962f3c7e6797f6f7a6ac49fad7522b8" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Ridgewood</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 79.6/100             </p>         </div>         </div>`)[0];
+                popup_a785fee172ec65585a97a2e2a0b78a76.setContent(html_7962f3c7e6797f6f7a6ac49fad7522b8);
+            
+        
+
+        circle_08e561af5a96685c4c06bd63d6b529ee.bindPopup(popup_a785fee172ec65585a97a2e2a0b78a76)
+        ;
+
+        
+    
+    
+            var circle_d0437c7e0dde26cd1680d3de5879282e = L.circle(
+                [40.58743551370491, -73.81390380943715],
+                {"bubblingMouseEvents": true, "color": "#e15837ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e15837ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 912.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_59f176edaae96e0570d9b7916c661544 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_30e3e4082ff32534ab192c26e79a86d2 = $(`<div id="html_30e3e4082ff32534ab192c26e79a86d2" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Rockaway Beach</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 87.5/100             </p>         </div>         </div>`)[0];
+                popup_59f176edaae96e0570d9b7916c661544.setContent(html_30e3e4082ff32534ab192c26e79a86d2);
+            
+        
+
+        circle_d0437c7e0dde26cd1680d3de5879282e.bindPopup(popup_59f176edaae96e0570d9b7916c661544)
+        ;
+
+        
+    
+    
+            var circle_852c06331ae05d7a30578edff6cc5a9b = L.circle(
+                [40.76162333675483, -73.95046293402748],
+                {"bubblingMouseEvents": true, "color": "#fec980ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec980ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 762.6999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_f787259cfd0ce1f316e94864c0304592 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_1ce479c06d24d065720fd23e16408058 = $(`<div id="html_1ce479c06d24d065720fd23e16408058" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Roosevelt Island</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 66.1/100             </p>         </div>         </div>`)[0];
+                popup_f787259cfd0ce1f316e94864c0304592.setContent(html_1ce479c06d24d065720fd23e16408058);
+            
+        
+
+        circle_852c06331ae05d7a30578edff6cc5a9b.bindPopup(popup_f787259cfd0ce1f316e94864c0304592)
+        ;
+
+        
+    
+    
+            var circle_b1d1758425a81263e4c0a02f382ec195 = L.circle(
+                [40.659224626215824, -73.73599681155697],
+                {"bubblingMouseEvents": true, "color": "#fed487ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed487ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 745.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_18745ffdc84ea2a1f3cd92b6cff478ee = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_23b2718127a408ebae646820dafdcd87 = $(`<div id="html_23b2718127a408ebae646820dafdcd87" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Rosedale</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 63.6/100             </p>         </div>         </div>`)[0];
+                popup_18745ffdc84ea2a1f3cd92b6cff478ee.setContent(html_23b2718127a408ebae646820dafdcd87);
+            
+        
+
+        circle_b1d1758425a81263e4c0a02f382ec195.bindPopup(popup_18745ffdc84ea2a1f3cd92b6cff478ee)
+        ;
+
+        
+    
+    
+            var circle_c6728e72e71f366e19b5b78f0f1f7b3d = L.circle(
+                [40.595221654253706, -73.95244873541705],
+                {"bubblingMouseEvents": true, "color": "#f68050ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f68050ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 873.3000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_f381dd3e1fee62006c52798ffed9607a = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_d5a373daaf9f623b35ce00eb4f3caa7f = $(`<div id="html_d5a373daaf9f623b35ce00eb4f3caa7f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Sheepshead Bay</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 81.9/100             </p>         </div>         </div>`)[0];
+                popup_f381dd3e1fee62006c52798ffed9607a.setContent(html_d5a373daaf9f623b35ce00eb4f3caa7f);
+            
+        
+
+        circle_c6728e72e71f366e19b5b78f0f1f7b3d.bindPopup(popup_f381dd3e1fee62006c52798ffed9607a)
+        ;
+
+        
+    
+    
+            var circle_bacc38b19018d5e389cd34867a9edf51 = L.circle(
+                [40.723954569748585, -74.00263564599919],
+                {"bubblingMouseEvents": true, "color": "#fda96bff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fda96bff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 815.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_bc5a4304a14c62e4b1be4f05bd6c55b8 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e080979bae35b7b67b2f1afe666aafb9 = $(`<div id="html_e080979bae35b7b67b2f1afe666aafb9" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">SoHo</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 73.6/100             </p>         </div>         </div>`)[0];
+                popup_bc5a4304a14c62e4b1be4f05bd6c55b8.setContent(html_e080979bae35b7b67b2f1afe666aafb9);
+            
+        
+
+        circle_bacc38b19018d5e389cd34867a9edf51.bindPopup(popup_bc5a4304a14c62e4b1be4f05bd6c55b8)
+        ;
+
+        
+    
+    
+            var circle_099b8c52acdb6fdcc481f0a34da2d5b6 = L.circle(
+                [40.82529786065797, -73.87273559765717],
+                {"bubblingMouseEvents": true, "color": "#1e6caeff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1e6caeff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 376.3, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_f565e5dfc5b7e663d5dedf05fa8b72c9 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_7817c3e648d3db14ba8a80783b3cf2af = $(`<div id="html_7817c3e648d3db14ba8a80783b3cf2af" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Soundview</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 10.9/100             </p>         </div>         </div>`)[0];
+                popup_f565e5dfc5b7e663d5dedf05fa8b72c9.setContent(html_7817c3e648d3db14ba8a80783b3cf2af);
+            
+        
+
+        circle_099b8c52acdb6fdcc481f0a34da2d5b6.bindPopup(popup_f565e5dfc5b7e663d5dedf05fa8b72c9)
+        ;
+
+        
+    
+    
+            var circle_e7f264617cdc0d5573aefef578edd7a8 = L.circle(
+                [40.670580586531855, -73.80621019554087],
+                {"bubblingMouseEvents": true, "color": "#4491c6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4491c6ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 487.6, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_ea68d2cb2a71c38dd5e1afb0d3e3552d = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c13f03b66164b41f80bc74defb83c309 = $(`<div id="html_c13f03b66164b41f80bc74defb83c309" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">South Ozone Park</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 26.8/100             </p>         </div>         </div>`)[0];
+                popup_ea68d2cb2a71c38dd5e1afb0d3e3552d.setContent(html_c13f03b66164b41f80bc74defb83c309);
+            
+        
+
+        circle_e7f264617cdc0d5573aefef578edd7a8.bindPopup(popup_ea68d2cb2a71c38dd5e1afb0d3e3552d)
+        ;
+
+        
+    
+    
+            var circle_dfe833094229ce6e871b62724a7f404e = L.circle(
+                [40.66488767303277, -73.98539854720963],
+                {"bubblingMouseEvents": true, "color": "#c31e13ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c31e13ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 969.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_ac2ed5e62088f02dabfd2bcb29e00e53 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_5d8956905bf83d38470a323eef1a0f32 = $(`<div id="html_5d8956905bf83d38470a323eef1a0f32" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">South Slope</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 95.7/100             </p>         </div>         </div>`)[0];
+                popup_ac2ed5e62088f02dabfd2bcb29e00e53.setContent(html_5d8956905bf83d38470a323eef1a0f32);
+            
+        
+
+        circle_dfe833094229ce6e871b62724a7f404e.bindPopup(popup_ac2ed5e62088f02dabfd2bcb29e00e53)
+        ;
+
+        
+    
+    
+            var circle_722a77045145a0dfa6b7606d18947ba5 = L.circle(
+                [40.669113081846405, -73.76007651193325],
+                {"bubblingMouseEvents": true, "color": "#58a0ceff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#58a0ceff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 533.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_43f73b8d1ef7401ed35207bfe241f189 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_cb68d22d4cd0903640170d2e4c4067b9 = $(`<div id="html_cb68d22d4cd0903640170d2e4c4067b9" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Springfield Gardens</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 33.4/100             </p>         </div>         </div>`)[0];
+                popup_43f73b8d1ef7401ed35207bfe241f189.setContent(html_cb68d22d4cd0903640170d2e4c4067b9);
+            
+        
+
+        circle_722a77045145a0dfa6b7606d18947ba5.bindPopup(popup_43f73b8d1ef7401ed35207bfe241f189)
+        ;
+
+        
+    
+    
+            var circle_7fd495ae95edfcdfd95ffc92b85d3a5d = L.circle(
+                [40.69759831738733, -73.76135315888487],
+                {"bubblingMouseEvents": true, "color": "#77b2d1ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#77b2d1ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 591.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_15332ed9cce8eedbf15a12318c8b0890 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_3319c15b2007fcbacccaa371ca702b80 = $(`<div id="html_3319c15b2007fcbacccaa371ca702b80" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">St. Albans</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 41.6/100             </p>         </div>         </div>`)[0];
+                popup_15332ed9cce8eedbf15a12318c8b0890.setContent(html_3319c15b2007fcbacccaa371ca702b80);
+            
+        
+
+        circle_7fd495ae95edfcdfd95ffc92b85d3a5d.bindPopup(popup_15332ed9cce8eedbf15a12318c8b0890)
+        ;
+
+        
+    
+    
+            var circle_bddbe0fac7757f5194b308b0143dea10 = L.circle(
+                [40.74143964498194, -73.92143867424585],
+                {"bubblingMouseEvents": true, "color": "#fee190ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee190ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 723.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_0284d0e4f538e246a50f49464c898633 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_8526bf038a02e353349087d211a19ff0 = $(`<div id="html_8526bf038a02e353349087d211a19ff0" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Sunnyside</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 60.5/100             </p>         </div>         </div>`)[0];
+                popup_0284d0e4f538e246a50f49464c898633.setContent(html_8526bf038a02e353349087d211a19ff0);
+            
+        
+
+        circle_bddbe0fac7757f5194b308b0143dea10.bindPopup(popup_0284d0e4f538e246a50f49464c898633)
+        ;
+
+        
+    
+    
+            var circle_7902c295101db54a73290a87383b3707 = L.circle(
+                [40.65235337084709, -74.00336830236563],
+                {"bubblingMouseEvents": true, "color": "#fec17bff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec17bff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 776.0, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_a520fd0b92445cc3bd3977f944a8da0f = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_64c975c9eff5160c534f3e4925bb1785 = $(`<div id="html_64c975c9eff5160c534f3e4925bb1785" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Sunset Park</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 68.0/100             </p>         </div>         </div>`)[0];
+                popup_a520fd0b92445cc3bd3977f944a8da0f.setContent(html_64c975c9eff5160c534f3e4925bb1785);
+            
+        
+
+        circle_7902c295101db54a73290a87383b3707.bindPopup(popup_a520fd0b92445cc3bd3977f944a8da0f)
+        ;
+
+        
+    
+    
+            var circle_84021875312e2346ff536c9aa82e88f7 = L.circle(
+                [40.759608942522604, -73.98465457124573],
+                {"bubblingMouseEvents": true, "color": "#4793c7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4793c7ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 493.20000000000005, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_36a324fb3376b17df3850a928ce07eb0 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_72265090962e7ac6e10fa49a9389aef9 = $(`<div id="html_72265090962e7ac6e10fa49a9389aef9" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Theater District</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 27.6/100             </p>         </div>         </div>`)[0];
+                popup_36a324fb3376b17df3850a928ce07eb0.setContent(html_72265090962e7ac6e10fa49a9389aef9);
+            
+        
+
+        circle_84021875312e2346ff536c9aa82e88f7.bindPopup(popup_36a324fb3376b17df3850a928ce07eb0)
+        ;
+
+        
+    
+    
+            var circle_28f63eb1d7f4a1474eee5205023ac950 = L.circle(
+                [40.63254339315508, -74.08600669213271],
+                {"bubblingMouseEvents": true, "color": "#9fc1beff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9fc1beff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 629.7, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_d5679526ebd5a730ae54b17479879044 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_dae60b38d286afbf14cc747222afda59 = $(`<div id="html_dae60b38d286afbf14cc747222afda59" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Tompkinsville</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 47.1/100             </p>         </div>         </div>`)[0];
+                popup_d5679526ebd5a730ae54b17479879044.setContent(html_dae60b38d286afbf14cc747222afda59);
+            
+        
+
+        circle_28f63eb1d7f4a1474eee5205023ac950.bindPopup(popup_d5679526ebd5a730ae54b17479879044)
+        ;
+
+        
+    
+    
+            var circle_fb7205102d6def588919de44108f9b40 = L.circle(
+                [40.71682020212871, -74.00727946609148],
+                {"bubblingMouseEvents": true, "color": "#cfd2a7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#cfd2a7ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 675.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_e56ce6b90edbb56b34a79393bf5e6d08 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_1910748d3a15a68063aa351bcbe77423 = $(`<div id="html_1910748d3a15a68063aa351bcbe77423" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Tribeca</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 53.6/100             </p>         </div>         </div>`)[0];
+                popup_e56ce6b90edbb56b34a79393bf5e6d08.setContent(html_1910748d3a15a68063aa351bcbe77423);
+            
+        
+
+        circle_fb7205102d6def588919de44108f9b40.bindPopup(popup_e56ce6b90edbb56b34a79393bf5e6d08)
+        ;
+
+        
+    
+    
+            var circle_46269f12e1fab16a4501ea9f2002e89f = L.circle(
+                [40.71164518655425, -73.9950832734066],
+                {"bubblingMouseEvents": true, "color": "#4491c6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#4491c6ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 486.20000000000005, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_d3bcb61d552c69c6805842a9f6475909 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_72002b1f2b1274b6119e64a90680e3c8 = $(`<div id="html_72002b1f2b1274b6119e64a90680e3c8" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Two Bridges</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 26.6/100             </p>         </div>         </div>`)[0];
+                popup_d3bcb61d552c69c6805842a9f6475909.setContent(html_72002b1f2b1274b6119e64a90680e3c8);
+            
+        
+
+        circle_46269f12e1fab16a4501ea9f2002e89f.bindPopup(popup_d3bcb61d552c69c6805842a9f6475909)
+        ;
+
+        
+    
+    
+            var circle_de7b1eae404b812ab97a93a8813517bc = L.circle(
+                [40.77264245757884, -73.95521041514462],
+                {"bubblingMouseEvents": true, "color": "#fdaf6fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fdaf6fff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 804.7, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_2a249e4a68c21200c092e2358f4efb7f = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_981d3e264a06587809c7efc209d6b359 = $(`<div id="html_981d3e264a06587809c7efc209d6b359" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Upper East Side</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 72.1/100             </p>         </div>         </div>`)[0];
+                popup_2a249e4a68c21200c092e2358f4efb7f.setContent(html_981d3e264a06587809c7efc209d6b359);
+            
+        
+
+        circle_de7b1eae404b812ab97a93a8813517bc.bindPopup(popup_2a249e4a68c21200c092e2358f4efb7f)
+        ;
+
+        
+    
+    
+            var circle_236dd8017c2f426733e7c998a324840e = L.circle(
+                [40.788643312407515, -73.97370120364593],
+                {"bubblingMouseEvents": true, "color": "#fdb170ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fdb170ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 801.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_88231d214940bb8e9a84f916b79ad4c5 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b81fa93d10dec95d9ab89e408311a50e = $(`<div id="html_b81fa93d10dec95d9ab89e408311a50e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Upper West Side</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 71.7/100             </p>         </div>         </div>`)[0];
+                popup_88231d214940bb8e9a84f916b79ad4c5.setContent(html_b81fa93d10dec95d9ab89e408311a50e);
+            
+        
+
+        circle_236dd8017c2f426733e7c998a324840e.bindPopup(popup_88231d214940bb8e9a84f916b79ad4c5)
+        ;
+
+        
+    
+    
+            var circle_d107a406f4075855bee681a70d504abd = L.circle(
+                [40.89541592209929, -73.85116153652037],
+                {"bubblingMouseEvents": true, "color": "#fee18fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee18fff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 724.2, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_4ce8c4eb7e2ba981f88e3bfe58c0f9d8 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_47d812d258ed7c94f892477ced47f901 = $(`<div id="html_47d812d258ed7c94f892477ced47f901" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Wakefield</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 60.6/100             </p>         </div>         </div>`)[0];
+                popup_4ce8c4eb7e2ba981f88e3bfe58c0f9d8.setContent(html_47d812d258ed7c94f892477ced47f901);
+            
+        
+
+        circle_d107a406f4075855bee681a70d504abd.bindPopup(popup_4ce8c4eb7e2ba981f88e3bfe58c0f9d8)
+        ;
+
+        
+    
+    
+            var circle_9e7f6fef2e0cc6dc8133ee1a68b56da8 = L.circle(
+                [40.84461754954631, -73.93772028733187],
+                {"bubblingMouseEvents": true, "color": "#a4c3bbff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#a4c3bbff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 634.5999999999999, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_7fba8ab0a683f0942b4592eff9c9bc89 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_ddddc48aaa23a86fcd77b6b66b06cb7a = $(`<div id="html_ddddc48aaa23a86fcd77b6b66b06cb7a" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Washington Heights</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 47.8/100             </p>         </div>         </div>`)[0];
+                popup_7fba8ab0a683f0942b4592eff9c9bc89.setContent(html_ddddc48aaa23a86fcd77b6b66b06cb7a);
+            
+        
+
+        circle_9e7f6fef2e0cc6dc8133ee1a68b56da8.bindPopup(popup_7fba8ab0a683f0942b4592eff9c9bc89)
+        ;
+
+        
+    
+    
+            var circle_cb67fb899dc1ce79ece55c8d8049406c = L.circle(
+                [40.734309848234645, -74.00423318822148],
+                {"bubblingMouseEvents": true, "color": "#bf160eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#bf160eff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 977.6, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_676e5000ed6fc676a074bdda075e28a9 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_7984bb2d621a5b8461f2c6d70f60b808 = $(`<div id="html_7984bb2d621a5b8461f2c6d70f60b808" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">West Village</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 96.8/100             </p>         </div>         </div>`)[0];
+                popup_676e5000ed6fc676a074bdda075e28a9.setContent(html_7984bb2d621a5b8461f2c6d70f60b808);
+            
+        
+
+        circle_cb67fb899dc1ce79ece55c8d8049406c.bindPopup(popup_676e5000ed6fc676a074bdda075e28a9)
+        ;
+
+        
+    
+    
+            var circle_d315f32df23cdbcad80a3083ce4a9f0d = L.circle(
+                [40.71242657183001, -73.95183846953684],
+                {"bubblingMouseEvents": true, "color": "#c72517ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c72517ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 962.9000000000001, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_253463f497b7eca38235fd066d374679 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_db2308452b34362b2fe786bca87480a3 = $(`<div id="html_db2308452b34362b2fe786bca87480a3" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Williamsburg</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 94.7/100             </p>         </div>         </div>`)[0];
+                popup_253463f497b7eca38235fd066d374679.setContent(html_db2308452b34362b2fe786bca87480a3);
+            
+        
+
+        circle_d315f32df23cdbcad80a3083ce4a9f0d.bindPopup(popup_253463f497b7eca38235fd066d374679)
+        ;
+
+        
+    
+    
+            var circle_6eebe510458a15b1ded98448b771684b = L.circle(
+                [40.655507954655626, -73.9784927819465],
+                {"bubblingMouseEvents": true, "color": "#c72618ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c72618ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 961.5, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_3fc6372c2f1327d090cd991c075d3038 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_0e07fa39cab77b5e5cc70e4ffdaf8147 = $(`<div id="html_0e07fa39cab77b5e5cc70e4ffdaf8147" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Windsor Terrace</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 94.5/100             </p>         </div>         </div>`)[0];
+                popup_3fc6372c2f1327d090cd991c075d3038.setContent(html_0e07fa39cab77b5e5cc70e4ffdaf8147);
+            
+        
+
+        circle_6eebe510458a15b1ded98448b771684b.bindPopup(popup_3fc6372c2f1327d090cd991c075d3038)
+        ;
+
+        
+    
+    
+            var circle_d0c44bea03dff69b033e06c75b46ef99 = L.circle(
+                [40.745088535876526, -73.89988944946946],
+                {"bubblingMouseEvents": true, "color": "#fee290ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fee290ff", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8, "radius": 722.8, "stroke": true, "weight": 2}
+            ).addTo(map_491f802b4369dbdc8573ecaf2f8c7d8e);
+        
+    
+        var popup_2c4ff216c6ebdaedac316fdcad7e6143 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_e561ad30949670af827152045e770dc5 = $(`<div id="html_e561ad30949670af827152045e770dc5" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial; width: 250px;">             <h4 style="margin-bottom: 5px;">Woodside</h4>             <p style="margin: 5px 0;">                 <b>Vibe Score:</b> 60.4/100             </p>         </div>         </div>`)[0];
+                popup_2c4ff216c6ebdaedac316fdcad7e6143.setContent(html_e561ad30949670af827152045e770dc5);
+            
+        
+
+        circle_d0c44bea03dff69b033e06c75b46ef99.bindPopup(popup_2c4ff216c6ebdaedac316fdcad7e6143)
+        ;
+
+        
+    
+</script>
+</html>

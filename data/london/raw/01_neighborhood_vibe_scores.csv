@@ -1,0 +1,34 @@
+neighbourhood,vibe_score,characteristics,sentiment,sentiment_category,review_count
+Kensington and Chelsea,83.3,"excellent convenience, excellent walkability, excellent safety",0.35663992227981395,Positive,6877
+Wandsworth,77.8,"excellent nightlife, excellent charm, excellent safety",0.36185760908566017,Positive,4417
+Hackney,75.0,"excellent nightlife, excellent liveliness, excellent food scene",0.3715980560687409,Positive,6184
+Richmond upon Thames,74.0,"excellent food scene, excellent charm, excellent local authentic",0.4164780749512939,Positive,1714
+Hammersmith and Fulham,72.6,"excellent convenience, excellent safety, excellent walkability",0.35306213071023007,Positive,4613
+Haringey,63.0,"excellent charm, excellent quietness, good liveliness",0.36632962008498476,Positive,2573
+Islington,59.8,"excellent nightlife, excellent liveliness, excellent food scene",0.3506496576108247,Positive,6006
+Greenwich,59.1,"excellent charm, good walkability, nightlife",0.3802254770592711,Positive,1955
+Westminster,57.3,"excellent walkability, excellent convenience, excellent liveliness",0.33775933589916707,Positive,13803
+Southwark,50.8,"excellent nightlife, excellent walkability, excellent liveliness",0.3410621560095076,Positive,6423
+Lambeth,49.0,"excellent liveliness, excellent nightlife, good convenience",0.34106449226558305,Positive,6335
+Brent,47.7,"good liveliness, good walkability, good family friendly",0.35351288066132464,Positive,2704
+Tower Hamlets,46.1,"excellent liveliness, excellent food scene, walkability",0.3466258870852412,Positive,7554
+Ealing,45.0,"good quietness, safety",0.35435509498660894,Positive,2306
+Camden,42.7,"excellent liveliness, excellent walkability, excellent convenience",0.333878949335207,Positive,9091
+Hounslow,42.4,"excellent food scene, good nightlife, charm",0.3876851827174841,Positive,1425
+Newham,41.2,"good safety, walkability",0.366077763519955,Positive,2004
+Lewisham,38.4,"excellent quietness, excellent local authentic, excellent nightlife",0.34421423844792165,Positive,2282
+Waltham Forest,38.3,"excellent quietness, excellent safety, good charm",0.3670756203604219,Positive,1484
+Merton,32.4,"excellent charm, excellent family friendly, excellent quietness",0.39131020663608285,Positive,1090
+Barnet,30.2,"excellent safety, excellent family friendly, quietness",0.35402601049456583,Positive,1577
+Sutton,26.9,"excellent quietness, excellent local authentic, excellent family friendly",0.4006632767421775,Positive,331
+Kingston upon Thames,26.8,"excellent family friendly, excellent charm, excellent local authentic",0.39144392983997944,Positive,661
+Hillingdon,26.1,"good convenience, food scene",0.3798090005018905,Positive,1043
+Bromley,25.8,"excellent quietness, excellent family friendly, excellent charm",0.39307675160395733,Positive,684
+Havering,23.8,excellent safety,0.40561853537362064,Positive,245
+Harrow,22.8,"excellent safety, excellent quietness, good family friendly",0.37331580036247725,Positive,470
+Enfield,20.3,"excellent family friendly, good charm, good quietness",0.3699235016731031,Positive,714
+Bexley,19.4,"excellent family friendly, excellent local authentic, quietness",0.3855522175798155,Positive,321
+City of London,19.0,"excellent food scene, excellent walkability, excellent convenience",0.3392507844043244,Positive,815
+Croydon,18.3,family friendly,0.3579065236892586,Positive,1322
+Barking and Dagenham,15.8,"excellent local authentic, family friendly, quietness",0.3753565433820673,Positive,337
+Redbridge,15.1,"safety, liveliness",0.3647278115771905,Positive,640

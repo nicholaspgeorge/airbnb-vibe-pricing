@@ -1,0 +1,218 @@
+neighbourhood,vibe_score,characteristics,sentiment,sentiment_category,review_count
+Brooklyn Heights,100.0,"excellent convenience, excellent food scene, excellent walkability",0.41660579690659194,Positive,170
+Cobble Hill,100.0,"excellent food scene, excellent charm, excellent convenience",0.42991197721383395,Positive,217
+Carroll Gardens,100.0,"excellent convenience, excellent charm, excellent food scene",0.4278809259936884,Positive,629
+Park Slope,100.0,"excellent charm, excellent convenience, excellent food scene",0.41242190644644416,Positive,1579
+Prospect Heights,100.0,"excellent food scene, excellent convenience, excellent charm",0.4342196585416299,Positive,805
+Boerum Hill,99.9,"excellent local authentic, excellent convenience, excellent nightlife",0.4171132818513965,Positive,498
+Fort Greene,99.8,"excellent convenience, excellent local authentic, excellent charm",0.40776847655913523,Positive,889
+Clinton Hill,99.4,"excellent convenience, excellent nightlife, excellent local authentic",0.40009766992714846,Positive,1174
+West Village,96.8,"excellent nightlife, excellent liveliness, excellent food scene",0.4141089331776832,Positive,814
+Greenpoint,96.6,"excellent nightlife, excellent food scene, excellent walkability",0.41442964080917455,Positive,1254
+DUMBO,96.0,"excellent local authentic, excellent food scene, excellent family friendly",0.4161222881078282,Positive,194
+South Slope,95.7,"excellent convenience, excellent charm, excellent food scene",0.4039607144092542,Positive,574
+Williamsburg,94.7,"excellent nightlife, excellent food scene, excellent convenience",0.41143258921060494,Positive,4742
+Windsor Terrace,94.5,"excellent convenience, excellent walkability, excellent family friendly",0.3869861820623016,Positive,320
+Greenwich Village,94.0,"excellent nightlife, excellent food scene, excellent walkability",0.4146593071605038,Positive,244
+Nolita,90.5,"excellent food scene, excellent nightlife, excellent walkability",0.425992857741962,Positive,303
+Downtown Brooklyn,89.0,"excellent walkability, excellent local authentic, excellent convenience",0.3934668153670748,Positive,187
+Rockaway Beach,87.5,"excellent nightlife, excellent charm, excellent walkability",0.41970245150949786,Positive,238
+Morris Park,86.5,"excellent local authentic, excellent walkability, excellent safety",0.40696284427785584,Positive,122
+Bayside,83.8,"excellent walkability, excellent family friendly, good food scene",0.4028197946473808,Positive,169
+Rego Park,83.6,"excellent safety, excellent convenience, family friendly",0.3984985673449152,Positive,170
+East Village,83.3,"excellent nightlife, excellent liveliness, excellent local authentic",0.40270436629140716,Positive,2395
+Gowanus,83.3,"excellent convenience, excellent walkability, excellent local authentic",0.3766388732885045,Positive,678
+Flatbush,82.8,"excellent convenience, excellent charm, good local authentic",0.38088238078773407,Positive,1374
+Prospect-Lefferts Gardens,82.0,"excellent convenience, excellent liveliness, excellent local authentic",0.3802024750159999,Positive,1247
+Sheepshead Bay,81.9,"good safety, good family friendly, convenience",0.3967934385589516,Positive,425
+Morningside Heights,80.6,"excellent nightlife, excellent convenience, excellent safety",0.3846918509149698,Positive,209
+Ditmars Steinway,80.0,"excellent safety, excellent walkability, excellent convenience",0.37724421901055144,Positive,773
+Ridgewood,79.6,"excellent convenience, excellent nightlife, excellent safety",0.37936746767294255,Positive,552
+Murray Hill,78.5,"excellent food scene, excellent walkability, excellent local authentic",0.38440272411289816,Positive,506
+Arverne,78.1,"excellent local authentic, excellent walkability, excellent family friendly",0.389763933489778,Positive,344
+Columbia St,77.2,"excellent walkability, excellent family friendly, excellent charm",0.4228008949045011,Positive,112
+Bedford-Stuyvesant,75.4,"excellent local authentic, excellent charm, good nightlife",0.38173139205038115,Positive,9513
+Bushwick,75.0,"excellent nightlife, excellent liveliness, good local authentic",0.38338159426778673,Positive,3270
+Crown Heights,74.3,"excellent convenience, excellent nightlife, good charm",0.3788630272551442,Positive,3483
+Kips Bay,73.8,"excellent food scene, excellent nightlife, good convenience",0.37932847673431536,Positive,506
+SoHo,73.6,"excellent liveliness, excellent food scene, good nightlife",0.3967839936443867,Positive,734
+Midwood,73.3,"excellent safety, excellent quietness, local authentic",0.3803634357116486,Positive,224
+Forest Hills,72.6,"excellent safety, excellent walkability, excellent nightlife",0.3619592028659367,Positive,203
+Upper East Side,72.1,"excellent safety, good nightlife, good food scene",0.3693024654628023,Positive,1668
+Bay Ridge,71.8,"excellent safety, excellent liveliness, good convenience",0.37115895008730804,Positive,243
+Upper West Side,71.7,"excellent convenience, excellent local authentic, good liveliness",0.36241488341655975,Positive,2255
+Lower East Side,69.8,"excellent nightlife, excellent food scene, excellent liveliness",0.3872555108423978,Positive,1891
+Fort Hamilton,69.5,"good safety, walkability, food scene",0.3831711644142515,Positive,364
+NoHo,69.0,"excellent walkability, excellent local authentic, excellent convenience",0.42432744001550254,Positive,99
+Bensonhurst,68.4,"excellent convenience, excellent safety, liveliness",0.37791212014100783,Positive,177
+Sunset Park,68.0,"good convenience, charm, liveliness",0.3739570371664031,Positive,1096
+Gramercy,67.1,"excellent food scene, excellent safety, good nightlife",0.36946616769020935,Positive,629
+Astoria,66.3,"excellent convenience, good safety, good nightlife",0.35947508092440844,Positive,1985
+Roosevelt Island,66.1,"excellent quietness, good charm, good safety",0.3840032601860458,Positive,137
+Financial District,65.3,good food scene,0.40730435430405937,Positive,1574
+Borough Park,64.3,"excellent convenience, excellent safety, excellent food scene",0.36667778853976984,Positive,178
+Flushing,64.2,"good walkability, safety, quietness",0.3770917749136103,Positive,1254
+Red Hook,64.1,"excellent local authentic, excellent charm, excellent quietness",0.38295783237718206,Positive,161
+Canarsie,64.1,"excellent quietness, good charm, family friendly",0.39510691930340935,Positive,1237
+Rosedale,63.6,"excellent family friendly, good quietness",0.3979141868162895,Positive,403
+Concourse,61.8,"excellent local authentic, excellent convenience, nightlife",0.36332847867423196,Positive,318
+Richmond Hill,61.0,"excellent safety, good family friendly, walkability",0.36153483101657763,Positive,315
+Wakefield,60.6,"excellent family friendly, convenience, charm",0.37526364521740424,Positive,170
+Sunnyside,60.5,"excellent convenience, excellent safety, excellent quietness",0.35766480995664446,Positive,753
+East Flatbush,60.5,"charm, safety, nightlife",0.37847024745842794,Positive,1670
+Woodside,60.4,"excellent convenience, good safety, good family friendly",0.3659827067945246,Positive,520
+Kensington,60.0,"excellent nightlife, excellent quietness, excellent walkability",0.3566911311192005,Positive,239
+Jackson Heights,57.0,"good safety, good convenience, local authentic",0.36089502105315235,Positive,520
+Hell's Kitchen,57.0,"excellent local authentic, excellent walkability, good food scene",0.36112120268969017,Positive,3302
+Flatlands,56.4,"good family friendly, quietness",0.39350068903939556,Positive,300
+Harlem,55.8,"excellent convenience, good local authentic, good liveliness",0.3502978034033127,Positive,5949
+Laurelton,55.6,good quietness,0.39362212373205063,Positive,147
+Battery Park City,54.6,"excellent food scene, nightlife, liveliness",0.3822313272310837,Positive,179
+Long Island City,54.3,"excellent convenience, good safety, nightlife",0.3488711742944237,Positive,1178
+Inwood,54.1,"excellent safety, good convenience, good liveliness",0.3531787765900942,Positive,293
+Coney Island,54.0,"excellent walkability, excellent liveliness, excellent convenience",0.4187127466864626,Positive,89
+Gravesend,53.8,excellent convenience,0.3743406731416403,Positive,195
+Tribeca,53.6,"excellent liveliness, food scene, nightlife",0.37937878179013146,Positive,219
+Chelsea,53.5,"excellent local authentic, good walkability, good food scene",0.3596686130649077,Positive,2584
+Maspeth,51.9,"excellent safety, excellent family friendly, good quietness",0.3619229019144249,Positive,338
+Longwood,51.4,"excellent safety, family friendly, food scene",0.3530367086360862,Positive,160
+Elmhurst,50.6,"excellent convenience, good safety, liveliness",0.3463460566744915,Positive,541
+Corona,50.5,"good local authentic, good safety, liveliness",0.36050481698076065,Positive,237
+Bath Beach,48.8,"excellent quietness, excellent family friendly, good charm",0.40425623541329364,Positive,116
+Mott Haven,48.4,"excellent safety, liveliness, convenience",0.3454423459683183,Positive,156
+Washington Heights,47.8,"excellent liveliness, good convenience, good local authentic",0.3430546536943003,Positive,1104
+East Elmhurst,47.5,varied reviews,0.3647768316285219,Positive,1351
+Flatiron District,47.2,"excellent food scene, nightlife",0.3775021246694371,Positive,396
+Tompkinsville,47.1,"excellent charm, excellent quietness, nightlife",0.3621811723421814,Positive,156
+Chinatown,46.8,"excellent liveliness, excellent convenience, good walkability",0.34633780118308416,Positive,1098
+Kingsbridge,45.9,"excellent liveliness, excellent convenience, excellent safety",0.3687480505221656,Positive,95
+Howard Beach,45.7,"excellent quietness, excellent safety, good charm",0.36898489885541963,Positive,112
+East Harlem,44.7,"good local authentic, good convenience, liveliness",0.3416685772721208,Positive,2027
+Jamaica,43.9,varied reviews,0.38013059114288755,Positive,1405
+Queens Village,42.7,"good family friendly, quietness",0.36774543939759163,Positive,376
+Cypress Hills,42.2,safety,0.36053663870511754,Positive,595
+City Island,42.1,"excellent charm, excellent walkability, excellent food scene",0.38921281841187133,Positive,72
+East New York,41.7,charm,0.36162916637627024,Positive,1182
+St. Albans,41.6,good quietness,0.37729729301712217,Positive,545
+Midtown,41.4,"good walkability, local authentic, food scene",0.3537116744668287,Positive,3808
+Briarwood,36.5,"good safety, family friendly, convenience",0.34993776487420675,Positive,115
+Bergen Beach,36.1,"excellent quietness, excellent local authentic, good family friendly",0.39494181510076576,Positive,81
+Ozone Park,35.7,"good quietness, convenience",0.3484237972754903,Positive,202
+Springfield Gardens,33.4,"excellent family friendly, quietness, convenience",0.3584998004398278,Positive,548
+Brownsville,29.1,varied reviews,0.34816904721857944,Positive,377
+Theater District,27.6,good walkability,0.33536821536685824,Positive,934
+South Ozone Park,26.8,quietness,0.3535127096459965,Positive,403
+Kew Gardens,26.7,"excellent liveliness, excellent quietness, excellent safety",0.3738490928489068,Positive,50
+Two Bridges,26.6,"excellent local authentic, excellent nightlife, safety",0.38295082084371856,Positive,60
+Great Kills,26.2,"excellent charm, excellent quietness, excellent safety",0.38929905936121423,Positive,36
+Clason Point,22.0,"good local authentic, good charm, safety",0.3376899054416567,Positive,97
+Fordham,19.3,"excellent liveliness, excellent safety, excellent local authentic",0.3444303805450691,Positive,54
+Morris Heights,18.5,"excellent local authentic, excellent walkability, excellent liveliness",0.2901461305290405,Neutral,27
+Mount Hope,12.1,quietness,0.33935592406386955,Positive,94
+Soundview,10.9,"excellent liveliness, excellent local authentic, safety",0.31675758238920143,Positive,31
+Allerton,,"excellent local authentic, excellent family friendly, good safety",0.3779807579531529,Positive,194
+Arden Heights,,excellent food scene,0.45846119929453266,Positive,9
+Arrochar,,"excellent quietness, excellent safety, good family friendly",0.3861972482487474,Positive,61
+Bay Terrace,,"excellent food scene, excellent safety, excellent nightlife",0.4579615468595732,Positive,22
+Baychester,,"excellent quietness, good food scene, local authentic",0.41094616843730375,Positive,54
+Bayswater,,"excellent family friendly, excellent charm, excellent quietness",0.40391456815976046,Positive,39
+Belle Harbor,,"excellent walkability, excellent quietness, good charm",0.4484322598697599,Positive,26
+Bellerose,,"excellent nightlife, excellent local authentic, excellent quietness",0.38204903337702834,Positive,47
+Belmont,,"excellent walkability, excellent local authentic, safety",0.32224717412217413,Positive,35
+Breezy Point,,"excellent nightlife, excellent local authentic, excellent quietness",0.3884559576226243,Positive,12
+Brighton Beach,,"excellent walkability, good safety, good local authentic",0.38820343634063326,Positive,113
+Bronxdale,,"excellent safety, excellent family friendly, convenience",0.42401881938304353,Positive,58
+Bull's Head,,"excellent charm, excellent safety, excellent family friendly",0.3685296157965764,Positive,34
+Cambria Heights,,good quietness,0.3935127732569902,Positive,159
+Castle Hill,,"excellent nightlife, excellent charm, good family friendly",0.38622238097963546,Positive,28
+Castleton Corners,,"excellent food scene, excellent family friendly, excellent charm",0.5010625308303811,Positive,16
+"Chelsea, Staten Island",,varied reviews,0.5933333333333334,Positive,1
+Civic Center,,"excellent liveliness, walkability",0.3513266859132931,Positive,33
+Claremont Village,,good local authentic,0.3694504001003662,Positive,96
+Clifton,,"excellent family friendly, excellent quietness, charm",0.36377591606767024,Positive,91
+Co-op City,,"excellent quietness, excellent safety, excellent charm",0.3540524779040404,Positive,8
+College Point,,"excellent nightlife, good quietness, family friendly",0.35259802328240913,Positive,148
+Concord,,"excellent safety, excellent charm, food scene",0.3991150129976233,Positive,25
+Concourse Village,,"excellent family friendly, excellent convenience, safety",0.38791740936430413,Positive,90
+Country Club,,excellent quietness,0.36333333333333334,Positive,3
+Douglaston,,"excellent liveliness, excellent safety, excellent family friendly",0.3423457906202802,Positive,22
+Dyker Heights,,"excellent family friendly, good convenience",0.35794596585072774,Positive,21
+East Morrisania,,"excellent convenience, good family friendly, food scene",0.41561467302538735,Positive,21
+Eastchester,,"excellent family friendly, excellent quietness, good charm",0.330615313253101,Positive,23
+Edenwald,,"excellent nightlife, quietness, food scene",0.3737654229409612,Positive,57
+Edgemere,,"excellent walkability, excellent food scene, good charm",0.36019508342314993,Positive,34
+Eltingville,,"excellent safety, excellent convenience, good nightlife",0.3529842322029822,Positive,12
+Emerson Hill,,varied reviews,0.44561838624338623,Positive,6
+Far Rockaway,,"excellent family friendly, excellent charm, good walkability",0.4181596606222328,Positive,63
+Fieldston,,"excellent safety, excellent food scene, excellent walkability",0.4621084830130883,Positive,19
+Fresh Meadows,,"excellent safety, excellent quietness, excellent family friendly",0.3759285744874845,Positive,62
+Gerritsen Beach,,"excellent family friendly, excellent quietness, excellent safety",0.3568457602339182,Positive,19
+Glendale,,"excellent walkability, excellent quietness, food scene",0.35596132529575414,Positive,116
+Graniteville,,"excellent convenience, excellent walkability",0.48444639804639805,Positive,10
+Grant City,,"excellent quietness, excellent safety, excellent family friendly",0.3696343434343434,Positive,10
+Grymes Hill,,"excellent family friendly, liveliness, charm",0.38709788704297976,Positive,34
+Highbridge,,"excellent food scene, excellent quietness, excellent liveliness",0.39517306101509403,Positive,26
+Hollis,,"excellent family friendly, good liveliness, good nightlife",0.38451649064669896,Positive,60
+Holliswood,,"excellent quietness, excellent walkability, excellent food scene",0.26331738437001595,Neutral,2
+Howland Hook,,"excellent quietness, excellent walkability",0.434537037037037,Positive,6
+Huguenot,,"excellent safety, good charm, quietness",0.4146292083850833,Positive,73
+Hunts Point,,good walkability,0.27504634414521045,Neutral,59
+Jamaica Estates,,"excellent family friendly, excellent quietness, excellent convenience",0.4077188448454686,Positive,36
+Jamaica Hills,,"walkability, family friendly",0.3804717943005662,Positive,25
+Kew Gardens Hills,,"excellent liveliness, excellent safety, excellent quietness",0.40290667017739745,Positive,52
+Lighthouse Hill,,"excellent charm, excellent food scene, good convenience",0.6462626262626263,Very Positive,3
+Little Italy,,"excellent liveliness, good food scene, good walkability",0.40600775665046707,Positive,245
+Little Neck,,"excellent safety, excellent local authentic, excellent quietness",0.30288194444444444,Positive,8
+Manhattan Beach,,"excellent charm, excellent walkability, excellent food scene",0.41186241348548897,Positive,48
+Marble Hill,,"excellent family friendly, excellent charm, good walkability",0.39741308777095063,Positive,31
+Mariners Harbor,,quietness,0.42395110045899526,Positive,57
+Melrose,,"excellent walkability, safety",0.3444142819228641,Positive,84
+Middle Village,,"excellent safety, excellent walkability, excellent family friendly",0.38220115915428027,Positive,75
+Midland Beach,,"excellent walkability, excellent convenience, good family friendly",0.3918770634278548,Positive,33
+Mill Basin,,"excellent food scene, good convenience, charm",0.42430425477640554,Positive,20
+Morrisania,,"excellent family friendly, excellent food scene, good safety",0.41327148817366216,Positive,23
+Mount Eden,,"excellent liveliness, food scene",0.3260160572028704,Positive,26
+Navy Yard,,"excellent convenience, excellent food scene",0.5687500000000001,Positive,1
+Neponsit,,"excellent nightlife, excellent charm, good food scene",0.2980128205128205,Neutral,3
+New Brighton,,"excellent quietness, charm",0.3729530310445932,Positive,95
+New Dorp Beach,,"excellent food scene, walkability",0.4505900981644924,Positive,65
+New Springville,,varied reviews,0.5505555555555556,Positive,2
+North Riverdale,,"excellent quietness, excellent family friendly, excellent charm",0.3815993089154854,Positive,17
+Norwood,,"excellent liveliness, good walkability, good family friendly",0.3751627037947307,Positive,58
+Olinville,,quietness,0.35046247665732955,Positive,17
+Parkchester,,"excellent local authentic, good charm",0.39333554954304956,Positive,25
+Pelham Bay,,"excellent liveliness, good charm, good local authentic",0.42578369218500794,Positive,19
+Pelham Gardens,,"excellent quietness, excellent family friendly, good safety",0.39816647807612837,Positive,159
+Port Morris,,"excellent nightlife, safety, charm",0.28866660638554353,Neutral,85
+Port Richmond,,good food scene,0.322355229162372,Positive,15
+Prince's Bay,,"excellent family friendly, excellent walkability, excellent food scene",0.3435018207436686,Positive,8
+Randall Manor,,"excellent liveliness, excellent quietness, charm",0.3428721567141706,Positive,66
+Riverdale,,"excellent safety, excellent quietness",0.3698773299892347,Positive,35
+Rosebank,,"excellent walkability, excellent convenience, good family friendly",0.3520351721053475,Positive,18
+Rossville,,varied reviews,0.65,Very Positive,1
+Schuylerville,,excellent charm,0.3047201178451179,Positive,11
+Sea Gate,,"excellent quietness, excellent safety, excellent charm",0.36342319645147436,Positive,57
+Shore Acres,,"excellent convenience, good nightlife, good local authentic",0.34980460124581525,Positive,28
+Silver Lake,,"excellent charm, family friendly",0.3863680660721665,Positive,49
+South Beach,,"excellent food scene, walkability",0.44521883539740686,Positive,14
+Spuyten Duyvil,,"excellent walkability, excellent family friendly, excellent local authentic",0.40360637891520246,Positive,17
+St. George,,"excellent walkability, excellent family friendly, good nightlife",0.38215599205837286,Positive,200
+Stapleton,,"excellent family friendly, excellent liveliness, good walkability",0.3550148621855353,Positive,78
+Stuyvesant Town,,"excellent food scene, good quietness, charm",0.3527353948721444,Positive,31
+Throgs Neck,,"excellent quietness, excellent charm, walkability",0.38307413312547245,Positive,42
+Todt Hill,,excellent food scene,0.65,Very Positive,1
+Tottenville,,"excellent family friendly, excellent charm, excellent quietness",0.38165485972360974,Positive,30
+Tremont,,"excellent convenience, excellent family friendly, excellent nightlife",0.3512747983987183,Positive,20
+Unionport,,"good quietness, safety, charm",0.3645720474141577,Positive,41
+University Heights,,"excellent liveliness, excellent convenience, excellent local authentic",0.3733944719301862,Positive,14
+Van Nest,,"excellent food scene, excellent quietness, good nightlife",0.34266526992104823,Positive,44
+Vinegar Hill,,"excellent local authentic, excellent charm, excellent nightlife",0.4347183140072907,Positive,89
+West Brighton,,"good charm, safety, nightlife",0.3718541927141461,Positive,68
+Westchester Square,,"excellent family friendly, excellent quietness",0.34194153839987174,Positive,9
+Westerleigh,,"excellent quietness, excellent safety, excellent walkability",0.300897266313933,Positive,6
+Whitestone,,"excellent quietness, excellent safety, good liveliness",0.36581473261517056,Positive,86
+Williamsbridge,,"excellent family friendly, excellent quietness",0.30777796140880637,Positive,92
+Willowbrook,,"excellent safety, excellent family friendly, good convenience",0.3386911976911977,Positive,5
+Woodhaven,,"good safety, family friendly",0.36629220408621044,Positive,238
+Woodlawn,,"excellent family friendly, excellent quietness, excellent charm",0.37425953773322196,Positive,7
+Woodrow,,varied reviews,0.5541666666666667,Positive,1

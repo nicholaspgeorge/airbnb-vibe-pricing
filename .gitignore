@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+
+# Environment variables
+.env
+.env.local
+
+# Exclude large raw data files (not needed for app deployment)
+data/*/raw/listings_*.csv
+data/*/raw/reviews_*.csv
+
+# Exclude RandomForest models (app only uses XGBoost)
+data/*/models/randomforest_*.pkl

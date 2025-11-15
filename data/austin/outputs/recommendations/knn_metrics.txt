@@ -1,0 +1,16 @@
+============================================================
+HIGH-DEMAND TWINS k-NN PRICING ENGINE - AUSTIN
+============================================================
+
+Configuration:
+  k = 25 neighbors
+  Min high-demand neighbors threshold = 5
+
+Evaluation Metrics:
+  total_listings: 2126
+  pct_high_confidence: 1.79
+  pct_within_band: 26.95
+  median_band_width: 37.50
+  mean_band_width: 160.17
+  median_n_high_demand_neighbors: 3.00
+  pct_sufficient_neighbors: 27.33

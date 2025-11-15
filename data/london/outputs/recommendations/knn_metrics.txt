@@ -1,0 +1,16 @@
+============================================================
+HIGH-DEMAND TWINS k-NN PRICING ENGINE - LONDON
+============================================================
+
+Configuration:
+  k = 25 neighbors
+  Min high-demand neighbors threshold = 5
+
+Evaluation Metrics:
+  total_listings: 12342
+  pct_high_confidence: 11.92
+  pct_within_band: 32.98
+  median_band_width: 37.00
+  mean_band_width: 67.72
+  median_n_high_demand_neighbors: 5.00
+  pct_sufficient_neighbors: 62.40

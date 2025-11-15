@@ -1,0 +1,48 @@
+# Vibe-Aware Pricing Engine - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core Data Science
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+lightgbm>=4.0.0
+
+# Model Interpretation
+shap>=0.42.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
+
+# Interactive Dashboards (optional for simulator)
+streamlit>=1.25.0
+
+# Geospatial Visualization (for vibe map)
+folium>=0.14.0
+geopandas>=0.13.0
+
+# Data Storage
+pyarrow>=12.0.0  # For parquet files
+fastparquet>=2023.0.0  # Alternative parquet engine
+
+# Jupyter Notebook
+jupyter>=1.0.0
+ipykernel>=6.23.0
+ipywidgets>=8.0.0
+
+# Utilities
+tqdm>=4.65.0  # Progress bars
+python-dateutil>=2.8.0
+
+# Text Processing & Sentiment Analysis (for vibe score generation)
+nltk>=3.8.0
+textblob>=0.18.0  # Sentiment analysis for vibe scores
+scikit-learn  # already listed above, includes TF-IDF
+
+# Optional: For reproducibility
+# python==3.8  # or 3.9, 3.10, 3.11

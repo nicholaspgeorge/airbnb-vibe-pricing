@@ -1,0 +1,44 @@
+neighbourhood,vibe_score,characteristics,sentiment,sentiment_category,review_count
+78703,100.0,"excellent walkability, excellent food scene, excellent nightlife",0.4473896661302049,Positive,4592
+78704,100.0,"excellent convenience, excellent walkability, excellent food scene",0.44627455910552777,Positive,17938
+78701,94.6,"excellent food scene, excellent walkability, excellent nightlife",0.45485183448260075,Positive,5741
+78702,93.2,"excellent nightlife, excellent food scene, excellent convenience",0.44245734364716904,Positive,21514
+78756,82.7,"excellent food scene, excellent walkability, excellent convenience",0.4282370878011721,Positive,1438
+78722,79.1,"excellent local authentic, excellent convenience, excellent nightlife",0.4301605966140965,Positive,2393
+78723,74.8,"good charm, walkability, family friendly",0.4370733229745893,Positive,3076
+78745,74.7,"good food scene, good local authentic, good liveliness",0.4323218176622442,Positive,4141
+78734,73.8,"excellent charm, good quietness, food scene",0.4471146622713126,Positive,2498
+78751,73.7,"excellent local authentic, excellent walkability, excellent food scene",0.4230919243547881,Positive,3816
+78748,68.8,"excellent safety, excellent local authentic, good quietness",0.44077507209434247,Positive,1182
+78744,64.4,"excellent safety, nightlife, liveliness",0.43222439168127375,Positive,3079
+78758,63.7,"excellent walkability, good convenience, food scene",0.42832950747661647,Positive,1903
+78757,62.3,"excellent convenience, excellent walkability, excellent liveliness",0.4229228194234973,Positive,1670
+78737,60.4,"excellent quietness, excellent family friendly, excellent charm",0.43147533581495645,Positive,1630
+78746,60.0,"excellent quietness, excellent liveliness, excellent charm",0.456409215691622,Positive,953
+78741,53.7,"excellent nightlife, excellent convenience, good food scene",0.42170835663170614,Positive,4218
+78705,51.5,"excellent convenience, excellent walkability, excellent food scene",0.40431811599414075,Positive,2606
+78752,49.3,"good nightlife, local authentic, safety",0.41886432922777206,Positive,1374
+78721,46.1,"good nightlife, convenience, local authentic",0.4194249216685126,Positive,3538
+78731,41.8,"excellent safety, excellent family friendly, excellent liveliness",0.4448909899566079,Positive,545
+78749,40.4,"excellent safety, excellent quietness, good food scene",0.4411289157384755,Positive,650
+78729,36.6,"excellent family friendly, good safety",0.43678679192000824,Positive,841
+78727,35.8,"excellent nightlife, safety, walkability",0.4368057308409667,Positive,763
+78736,32.2,"excellent quietness, excellent liveliness, excellent nightlife",0.4257032584681002,Positive,851
+78754,30.7,"excellent safety, excellent nightlife, excellent quietness",0.43776627818988406,Positive,571
+78753,28.9,good safety,0.41181487503186365,Positive,1274
+78759,26.4,"excellent family friendly, excellent safety, good convenience",0.43332306363816125,Positive,507
+78732,26.2,"excellent charm, excellent family friendly, excellent quietness",0.46786739899918695,Positive,458
+78733,24.3,"excellent quietness, excellent charm, good walkability",0.4457360187763665,Positive,429
+78728,23.7,"excellent quietness, good family friendly, safety",0.4309590973304928,Positive,551
+78717,23.0,"excellent safety, excellent local authentic, excellent liveliness",0.41617871751777286,Positive,214
+78738,20.8,"excellent charm, excellent quietness, excellent local authentic",0.4239870415559903,Positive,265
+78730,20.0,"excellent charm, excellent quietness, excellent liveliness",0.42859434438147515,Positive,179
+78725,19.3,"excellent liveliness, good convenience, good safety",0.42777430495015895,Positive,426
+78724,19.0,charm,0.41517602126352154,Positive,961
+78747,13.5,"excellent safety, excellent family friendly, good local authentic",0.41108524680407604,Positive,320
+78750,10.5,"good charm, good quietness, family friendly",0.4126589815657085,Positive,259
+78735,6.7,"quietness, family friendly",0.37613835515017735,Positive,274
+78719,,"excellent quietness, excellent local authentic",0.37465796048719047,Positive,78
+78726,,"excellent charm, excellent family friendly, excellent food scene",0.40940324382758353,Positive,100
+78739,,"excellent family friendly, excellent safety, excellent liveliness",0.44410699224865907,Positive,173
+78742,,"excellent family friendly, excellent convenience, charm",0.3481004088504088,Positive,11

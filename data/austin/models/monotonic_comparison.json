@@ -1,0 +1,22 @@
+{
+  "baseline": {
+    "cv_mae": 0.22447877618546527,
+    "test_mae": 0.22449527457037155,
+    "test_rmse": 0.28903537362403053,
+    "test_r2": 0.10774560924461518,
+    "monotonicity_violations": 17,
+    "monotonicity_violation_pct": 34.69387755102041
+  },
+  "monotonic": {
+    "cv_mae": 0.22571901351219528,
+    "test_mae": 0.22464276225144206,
+    "test_rmse": 0.28911638136476664,
+    "test_r2": 0.10724539613703177,
+    "monotonicity_violations": 12,
+    "monotonicity_violation_pct": 24.489795918367346
+  },
+  "impact": {
+    "mae_change_pct": 0.06569745459131031,
+    "r2_change_pct": -0.4642538207267254
+  }
+}

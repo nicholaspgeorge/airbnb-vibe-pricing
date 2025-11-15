@@ -1,0 +1,12 @@
+Metric,Value
+City,Nyc
+Total Listings,"36,111"
+Neighborhoods,224
+Mean Price (£),£680.53
+Median Price (£),£154.00
+Mean occ_90,0.607
+High-Demand %,49.9%
+Vibe Match Rate %,94.89%
+Bedrooms Missing %,16.5%
+Bathrooms Missing %,39.9%
+Review Scores Missing %,31.0%

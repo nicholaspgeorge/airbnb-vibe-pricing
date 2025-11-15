@@ -1,0 +1,583 @@
+"""
+LONDON PRICING PAGE - Full Functionality
+
+Complete property pricing tool with k-NN recommendations,
+XGBoost predictions, and revenue optimization
+
+Author: Vibe-Aware Pricing Team
+"""
+
+import streamlit as st
+import pandas as pd
+import numpy as np
+import plotly.graph_objects as go
+import plotly.express as px
+import json
+from pathlib import Path
+import sys
+
+# Add parent directory to path for imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from utils.model_loader import get_neighborhoods, get_vibe_for_neighborhood, get_average_price
+from utils.predictor import (
+    get_knn_price_recommendation,
+    generate_revenue_curve,
+    get_optimization_summary,
+    predict_occupancy
+)
+
+# Page config
+st.set_page_config(
+    page_title="London Pricing",
+    page_icon="🏴󠁧󠁢󠁥󠁮󠁧󠁿",  # England flag
+    layout="wide"
+)
+
+# Custom CSS
+st.markdown("""
+<style>
+    .metric-card {
+        padding: 1rem;
+        background-color: #f0f2f6;
+        border-radius: 8px;
+        border-left: 4px solid #08519c;
+    }
+    .recommendation-box {
+        padding: 1.5rem;
+        background-color: #e8f4f8;
+        border-radius: 10px;
+        border: 2px solid #08519c;
+        margin: 1rem 0;
+    }
+    .vibe-score {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #b30000;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Title
+st.title("🏴󠁧󠁢󠁥󠁮󠁧󠁿 London Property Pricing")
+st.markdown("**Get data-driven price recommendations for your Airbnb property**")
+st.markdown("---")
+
+# Load amenities
+BASE_DIR = Path(__file__).parent.parent.parent
+with open(BASE_DIR / 'data/amenities_master_list.json', 'r') as f:
+    amenities_data = json.load(f)
+
+# Get top 50 most common amenities for better UX
+TOP_AMENITIES = [
+    "Wifi", "Kitchen", "Washer", "Dryer", "Air conditioning", "Heating",
+    "TV", "Iron", "Hair dryer", "Smoke alarm", "Carbon monoxide alarm",
+    "Fire extinguisher", "Basic toiletries (soap, towels, toilet paper)", "Hangers", "Bed linens", "Hot water",
+    "Shampoo", "Coffee maker", "Refrigerator", "Dishes and silverware",
+    "Cooking basics", "Oven/Stove", "Microwave", "Dishwasher",
+    "Freezer", "Dining table", "Private entrance", "Lockbox",
+    "Self check-in", "Free street parking", "Paid parking", "Elevator",
+    "Gym", "Pool", "Bathtub", "First aid kit", "Laptop friendly workspace",
+    "Ethernet connection", "Balcony", "Patio", "BBQ grill", "Garden",
+    "Luggage dropoff", "Long term stays allowed", "Pets allowed",
+    "Smoking allowed", "Suitable for events", "Family/kid friendly"
+]
+
+# Sidebar - Property Input Form
+with st.sidebar:
+    st.header("📝 Property Details")
+
+    # Property Type
+    property_type = st.selectbox(
+        "Property Type",
+        ["Entire home/apt", "Private room", "Shared room", "Hotel room"]
+    )
+
+    # Neighborhood
+    neighborhoods = get_neighborhoods('london')
+    neighbourhood = st.selectbox(
+        "Neighborhood",
+        neighborhoods,
+        help="Select the neighborhood where your property is located"
+    )
+
+    # Basic details
+    st.subheader("Capacity & Rooms")
+    col1, col2 = st.columns(2)
+    with col1:
+        accommodates = st.number_input("Guests", min_value=1, max_value=16, value=2)
+        bedrooms = st.number_input("Bedrooms", min_value=0, max_value=10, value=1)
+    with col2:
+        bathrooms = st.number_input("Bathrooms", min_value=0.0, max_value=10.0, value=1.0, step=0.5)
+        beds = st.number_input("Beds", min_value=0, max_value=20, value=1)
+
+    # Amenities
+    st.subheader("Amenities")
+    st.caption("All amenities are pre-selected. Click the 'x' to remove any that your property doesn't have:")
+
+    selected_amenities = st.multiselect(
+        "Choose amenities",
+        TOP_AMENITIES,
+        default=TOP_AMENITIES,  # Pre-select all amenities
+        label_visibility="collapsed"
+    )
+
+    amenities_count = len(selected_amenities)
+    st.metric("Total Amenities", amenities_count)
+
+    # Additional fields
+    st.subheader("Additional Details")
+    minimum_nights = st.number_input("Minimum Nights", min_value=1, max_value=365, value=1)
+    maximum_nights = st.number_input("Maximum Nights", min_value=1, max_value=1125, value=30)
+
+    # Estimated price (for curve generation)
+    st.subheader("Your Estimated Price")
+
+    # Calculate average price based on property type and neighborhood
+    avg_price = get_average_price('london', neighbourhood=neighbourhood, property_type=property_type)
+
+    estimated_price = st.number_input(
+        "£/night",
+        min_value=10,
+        max_value=1000,
+        value=avg_price,
+        step=5,
+        help=f"Pre-populated with average price (£{avg_price}) for {property_type} in {neighbourhood}. Adjust as needed."
+    )
+
+    # Calculate button
+    calculate = st.button("🎯 Get Price Recommendations", type="primary", use_container_width=True)
+
+# Main content
+if not calculate:
+    st.info("👈 Fill in your property details in the sidebar and click '🎯 Get Price Recommendations' to see pricing insights!")
+
+    st.markdown("### What You'll Get:")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("""
+        **📊 k-NN Price Band**
+        - Price range from similar successful listings
+        - Based on 25 nearest neighbors
+        - Confidence indicator
+        """)
+
+    with col2:
+        st.markdown("""
+        **📈 Revenue Optimization**
+        - Optimal price for max revenue
+        - Expected occupancy at different prices
+        - Interactive price slider
+        """)
+
+    with col3:
+        st.markdown("""
+        **🗺️ Neighborhood Vibe**
+        - 11-dimension vibe breakdown
+        - Radar chart visualization
+        - Location insights
+        """)
+
+else:
+    # Get vibe data for neighborhood
+    vibe_data = get_vibe_for_neighborhood('london', neighbourhood)
+
+    if vibe_data is None:
+        st.error(f"No vibe data found for {neighbourhood}. Please select a different neighborhood.")
+        st.stop()
+
+    # Build property data dict
+    property_data = {
+        'property_type': property_type,
+        'room_type': property_type,
+        'neighbourhood': neighbourhood,
+        'accommodates': accommodates,
+        'bedrooms': bedrooms,
+        'bathrooms': bathrooms,
+        'beds': beds,
+        'amenities_count': amenities_count,
+        'minimum_nights': minimum_nights,
+        'maximum_nights': maximum_nights,
+        'vibe_score': vibe_data['vibe_score'],
+        'walkability_score': vibe_data['walkability_score'],
+        'safety_score': vibe_data['safety_score'],
+        'nightlife_score': vibe_data['nightlife_score'],
+        'quietness_score': vibe_data['quietness_score'],
+        'family_friendly_score': vibe_data['family_friendly_score'],
+        'local_authentic_score': vibe_data['local_authentic_score'],
+        'convenience_score': vibe_data['convenience_score'],
+        'food_scene_score': vibe_data['food_scene_score'],
+        'liveliness_score': vibe_data['liveliness_score'],
+        'charm_score': vibe_data['charm_score'],
+        # Additional fields for model
+        'neighbourhood_encoded': 0,  # Placeholder
+        'host_listings_count': 1,    # Assume single property
+    }
+
+    # Progress indicator
+    with st.spinner("🔄 Analyzing your property and finding similar listings..."):
+
+        # ====================================================================
+        # SECTION 1: Neighborhood Vibe Display
+        # ====================================================================
+        st.markdown("## 🗺️ Your Neighborhood: " + neighbourhood)
+
+        col1, col2, col3 = st.columns([1, 2, 1])
+
+        with col1:
+            st.markdown('<div class="vibe-score">' + f"{vibe_data['vibe_score']:.1f}" + '</div>', unsafe_allow_html=True)
+            st.caption("Vibe Score (out of 100)")
+
+            # Color indicator
+            vibe_score = vibe_data['vibe_score']
+            if vibe_score >= 70:
+                st.success("🔥 High Vibe - Premium pricing potential!")
+            elif vibe_score >= 40:
+                st.info("👍 Medium Vibe - Balanced neighborhood")
+            else:
+                st.warning("📍 Low Vibe - Value-oriented pricing")
+
+        with col2:
+            # Vibe radar chart
+            vibe_dimensions = {
+                'Walkability': vibe_data['walkability_score'],
+                'Safety': vibe_data['safety_score'],
+                'Nightlife': vibe_data['nightlife_score'],
+                'Quietness': vibe_data['quietness_score'],
+                'Family-Friendly': vibe_data['family_friendly_score'],
+                'Local Authentic': vibe_data['local_authentic_score'],
+                'Convenience': vibe_data['convenience_score'],
+                'Food Scene': vibe_data['food_scene_score'],
+                'Liveliness': vibe_data['liveliness_score'],
+                'Charm': vibe_data['charm_score']
+            }
+
+            fig_radar = go.Figure()
+
+            fig_radar.add_trace(go.Scatterpolar(
+                r=list(vibe_dimensions.values()),
+                theta=list(vibe_dimensions.keys()),
+                fill='toself',
+                name=neighbourhood,
+                line_color='#08519c',
+                fillcolor='rgba(8, 81, 156, 0.3)',
+                hovertemplate='<b>%{theta}</b><br>Score: %{r:.1f}<extra></extra>'
+            ))
+
+            fig_radar.update_layout(
+                polar=dict(
+                    radialaxis=dict(visible=True, range=[0, 10]),
+                    angularaxis=dict(
+                        color='black',  # Make dimension labels black
+                        gridcolor='lightgray'
+                    )
+                ),
+                showlegend=False,
+                title=f"{neighbourhood} Vibe Profile",
+                height=400,
+                font=dict(color='black')  # Ensure all text is black
+            )
+
+            st.plotly_chart(fig_radar, use_container_width=True)
+
+        with col3:
+            st.markdown("**Top Vibe Dimensions:**")
+            # Sort vibe dimensions
+            sorted_vibes = sorted(vibe_dimensions.items(), key=lambda x: x[1], reverse=True)
+            for i, (dim, score) in enumerate(sorted_vibes[:5], 1):
+                st.markdown(f"{i}. **{dim}**: {score:.1f}/10")
+
+        st.markdown("---")
+
+        # ====================================================================
+        # SECTION 2: k-NN Price Recommendation
+        # ====================================================================
+        st.markdown("## 📊 k-NN Price Band Recommendation")
+        st.caption("Based on similar high-demand properties (≥75% occupancy)")
+
+        knn_result = get_knn_price_recommendation('london', property_data)
+
+        if knn_result['success']:
+            col1, col2, col3, col4 = st.columns(4)
+
+            with col1:
+                st.metric(
+                    "Low (25th percentile)",
+                    f"£{knn_result['price_low']:.0f}",
+                    help="Conservative pricing - lower risk"
+                )
+
+            with col2:
+                st.metric(
+                    "Mid (Median)",
+                    f"£{knn_result['price_mid']:.0f}",
+                    help="Typical price for similar listings"
+                )
+
+            with col3:
+                st.metric(
+                    "High (75th percentile)",
+                    f"£{knn_result['price_high']:.0f}",
+                    help="Premium pricing - higher reward"
+                )
+
+            with col4:
+                st.metric(
+                    "Confidence",
+                    knn_result['confidence'],
+                    delta=f"{knn_result['n_neighbors']} comps",
+                    help=knn_result['message']
+                )
+
+            # Recommendation box
+            st.markdown(f"""
+            <div class="recommendation-box">
+                <h4>💡 k-NN Recommendation</h4>
+                <p>Based on {knn_result['n_neighbors']} similar high-performing properties in {neighbourhood},
+                we recommend pricing between <strong>£{knn_result['price_low']:.0f}</strong> and
+                <strong>£{knn_result['price_high']:.0f}</strong> per night.</p>
+                <p>The median price for your property type is <strong>£{knn_result['price_mid']:.0f}</strong>.</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+        else:
+            st.warning(f"⚠️ {knn_result['message']}")
+            st.info("💡 We'll use the XGBoost model below to provide predictions even with limited comparable data.")
+
+        st.markdown("---")
+
+        # ====================================================================
+        # SECTION 3: Revenue Optimization Curve
+        # ====================================================================
+        st.markdown("## 📈 Revenue Optimization")
+        st.caption("Find the price that maximizes your monthly revenue")
+
+        with st.spinner("Generating revenue curve..."):
+            revenue_curve = generate_revenue_curve('london', property_data, estimated_price, n_points=50)
+            optimization = get_optimization_summary(revenue_curve, estimated_price)
+
+        # Key metrics
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric(
+                "Your Price",
+                f"£{estimated_price:.0f}",
+                delta=f"{optimization['current_occ']*100:.1f}% occ"
+            )
+
+        with col2:
+            st.metric(
+                "Optimal Price",
+                f"£{optimization['optimal_price']:.0f}",
+                delta=f"{optimization['price_change_pct']:+.1f}%"
+            )
+
+        with col3:
+            st.metric(
+                "Current Revenue",
+                f"£{optimization['current_revenue']:.0f}/mo"
+            )
+
+        with col4:
+            st.metric(
+                "Optimal Revenue",
+                f"£{optimization['optimal_revenue']:.0f}/mo",
+                delta=f"+{optimization['revenue_lift_pct']:.1f}%"
+            )
+
+        # Revenue curve visualization
+        fig_revenue = go.Figure()
+
+        # Revenue curve
+        fig_revenue.add_trace(go.Scatter(
+            x=revenue_curve['price'],
+            y=revenue_curve['monthly_revenue'],
+            mode='lines',
+            name='Revenue',
+            line=dict(color='#08519c', width=3),
+            fill='tozeroy',
+            fillcolor='rgba(8, 81, 156, 0.1)'
+        ))
+
+        # Mark current price
+        current_point = revenue_curve[revenue_curve['is_current']].iloc[0]
+        fig_revenue.add_trace(go.Scatter(
+            x=[current_point['price']],
+            y=[current_point['monthly_revenue']],
+            mode='markers',
+            name='Your Price',
+            marker=dict(size=15, color='orange', symbol='diamond')
+        ))
+
+        # Mark optimal price
+        optimal_point = revenue_curve[revenue_curve['is_optimal']].iloc[0]
+        fig_revenue.add_trace(go.Scatter(
+            x=[optimal_point['price']],
+            y=[optimal_point['monthly_revenue']],
+            mode='markers',
+            name='Optimal Price',
+            marker=dict(size=15, color='green', symbol='star')
+        ))
+
+        # Safe band shading
+        if optimization['has_safe_band']:
+            safe_band = revenue_curve[revenue_curve['is_safe']]
+            fig_revenue.add_trace(go.Scatter(
+                x=safe_band['price'],
+                y=safe_band['monthly_revenue'],
+                fill='tozeroy',
+                fillcolor='rgba(0, 255, 0, 0.1)',
+                line=dict(width=0),
+                name='Safe Band (≥75% occ)',
+                showlegend=True
+            ))
+
+        fig_revenue.update_layout(
+            title="Monthly Revenue vs. Price",
+            xaxis_title="Nightly Price (£)",
+            yaxis_title="Monthly Revenue (£)",
+            height=500,
+            hovermode='x unified'
+        )
+
+        st.plotly_chart(fig_revenue, use_container_width=True)
+
+        # Optimization summary
+        if optimization['revenue_lift_pct'] > 10:
+            st.success(f"""
+            ✅ **Significant Revenue Opportunity!**
+            By adjusting your price from £{estimated_price:.0f} to £{optimization['optimal_price']:.0f},
+            you could increase monthly revenue by **{optimization['revenue_lift_pct']:.1f}%**
+            (from £{optimization['current_revenue']:.0f} to £{optimization['optimal_revenue']:.0f}).
+            """)
+        elif optimization['revenue_lift_pct'] > 0:
+            st.info(f"""
+            Your pricing is close to optimal! A small adjustment to £{optimization['optimal_price']:.0f}
+            could yield a {optimization['revenue_lift_pct']:.1f}% revenue increase.
+            """)
+        else:
+            st.success("🎯 Your price is already at or near the revenue-maximizing point!")
+
+        st.markdown("---")
+
+        # ====================================================================
+        # SECTION 4: Interactive Price Slider
+        # ====================================================================
+        st.markdown("## 🎚️ Interactive Price Explorer")
+        st.caption("Drag the slider to see how different prices affect occupancy and revenue")
+
+        min_slider = int(estimated_price * 0.5)
+        max_slider = int(estimated_price * 2.0)
+
+        test_price = st.slider(
+            "Test Price (£/night)",
+            min_value=min_slider,
+            max_value=max_slider,
+            value=int(optimization['optimal_price']),
+            step=5,
+            key='price_slider'  # Stable key to prevent reset
+        )
+
+        # Predict at test price
+        test_occ = predict_occupancy('london', property_data, test_price)
+        test_revenue = test_price * test_occ * 30
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric("Test Price", f"£{test_price}")
+
+        with col2:
+            occ_delta = (test_occ - optimization['current_occ']) * 100
+            st.metric(
+                "Predicted Occupancy",
+                f"{test_occ*100:.1f}%",
+                delta=f"{occ_delta:+.1f} ppts"
+            )
+
+        with col3:
+            rev_delta = ((test_revenue - optimization['current_revenue']) / optimization['current_revenue']) * 100
+            st.metric(
+                "Monthly Revenue",
+                f"£{test_revenue:.0f}",
+                delta=f"{rev_delta:+.1f}%"
+            )
+
+        # Occupancy gauge
+        fig_gauge = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=test_occ * 100,
+            title={'text': "Predicted Occupancy"},
+            delta={'reference': 75, 'suffix': " ppts from 75% target"},
+            gauge={
+                'axis': {'range': [None, 100]},
+                'bar': {'color': "darkblue"},
+                'steps': [
+                    {'range': [0, 50], 'color': "lightgray"},
+                    {'range': [50, 75], 'color': "lightblue"},
+                    {'range': [75, 100], 'color': "lightgreen"}
+                ],
+                'threshold': {
+                    'line': {'color': "red", 'width': 4},
+                    'thickness': 0.75,
+                    'value': 75
+                }
+            }
+        ))
+
+        fig_gauge.update_layout(height=300)
+        st.plotly_chart(fig_gauge, use_container_width=True)
+
+        st.markdown("---")
+
+        # ====================================================================
+        # SECTION 5: Final Recommendations
+        # ====================================================================
+        st.markdown("## 🎯 Final Recommendations")
+
+        # Combine k-NN and optimization insights
+        if knn_result['success']:
+            knn_mid = knn_result['price_mid']
+            opt_price = optimization['optimal_price']
+
+            if abs(knn_mid - opt_price) / knn_mid < 0.15:  # Within 15%
+                st.success(f"""
+                ✅ **Strong Consensus**: Both k-NN and XGBoost models agree!
+                Recommended price: **£{(knn_mid + opt_price) / 2:.0f}** (average of both methods)
+                """)
+            else:
+                st.info(f"""
+                📊 **Model Variance Detected**:
+                - k-NN recommendation: £{knn_mid:.0f} (based on similar properties)
+                - XGBoost optimization: £{opt_price:.0f} (revenue-maximizing)
+
+                Consider pricing in the range of £{min(knn_mid, opt_price):.0f} - £{max(knn_mid, opt_price):.0f}
+                """)
+
+        # Action items
+        st.markdown("### 📝 Next Steps:")
+        st.markdown(f"""
+        1. **Set your base price** around the recommended range
+        2. **Monitor occupancy** for the first 2-4 weeks
+        3. **Adjust seasonally** - increase during high-demand periods
+        4. **Leverage your vibe score ({vibe_data['vibe_score']:.1f})** in your listing description
+        5. **Highlight key amenities**: {', '.join(selected_amenities[:5])}
+        """)
+
+# Footer
+st.markdown("---")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("🗺️ View London Vibe Map", use_container_width=True):
+        st.switch_page("pages/4_🗺️_Vibe_Maps.py")
+
+with col2:
+    if st.button("🤠 Try Austin", use_container_width=True):
+        st.switch_page("pages/2_🤠_Austin.py")
+
+with col3:
+    if st.button("🗽 Try NYC", use_container_width=True):
+        st.switch_page("pages/3_🗽_NYC.py")
