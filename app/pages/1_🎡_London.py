@@ -573,10 +573,34 @@ if st.session_state.calculated:
     
     # Action items
     st.markdown("### 📝 Next Steps:")
+
+    # Smart vibe recommendation based on score
+    vibe_dimensions = {
+        'Walkability': vibe_data['walkability_score'],
+        'Safety': vibe_data['safety_score'],
+        'Nightlife': vibe_data['nightlife_score'],
+        'Quietness': vibe_data['quietness_score'],
+        'Family-Friendly': vibe_data['family_friendly_score'],
+        'Local Authentic': vibe_data['local_authentic_score'],
+        'Convenience': vibe_data['convenience_score'],
+        'Food Scene': vibe_data['food_scene_score'],
+        'Liveliness': vibe_data['liveliness_score'],
+        'Charm': vibe_data['charm_score']
+    }
+
+    if vibe_data['vibe_score'] >= 50:
+        # Medium/high vibe - leverage overall vibe
+        vibe_tip = f"**Leverage your neighborhood vibe** ({vibe_data['vibe_score']:.0f}/100) in your listing description"
+    else:
+        # Low vibe - highlight top 2 specific strengths
+        top_2_vibes = sorted(vibe_dimensions.items(), key=lambda x: x[1], reverse=True)[:2]
+        vibe_names = ' and '.join([f"{name} ({score:.0f})" for name, score in top_2_vibes])
+        vibe_tip = f"**Highlight your neighborhood's strengths**: {vibe_names} in your listing description"
+
     st.markdown(f"""
     1. **Set your base price** within the recommended range
     2. **Monitor occupancy** for the first 2-4 weeks and adjust
-    3. **Leverage your neighborhood vibe** ({vibe_data['vibe_score']:.0f}/100) in your listing description
+    3. {vibe_tip}
     4. **Highlight key amenities** in photos and description
     5. **Adjust seasonally** - increase during high-demand periods
     """)
